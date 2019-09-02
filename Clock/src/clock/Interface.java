@@ -44,7 +44,7 @@ public class Interface {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.getContentPane().setLayout(null);
         
-        img = new ImageIcon("Clock\\clock\\images\\background.png");
+        img = new ImageIcon("Clock\\images\\background.png");
         background = new JLabel(img);
         background_p = new JPanel();
         background_p.setLayout(null);

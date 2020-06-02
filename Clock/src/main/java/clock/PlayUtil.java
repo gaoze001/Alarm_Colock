@@ -3,6 +3,7 @@ package clock;
 import javazoom.spi.mpeg.sampled.file.MpegAudioFileReader;
 
 import javax.sound.sampled.*;
+import javax.swing.*;
 import java.io.File;
 import java.io.IOException;
 
@@ -137,9 +138,10 @@ public class PlayUtil {
      * @Description: 播放 mp3
      * @date 2019年10月25日 下午12:28:41
      */
-    public void playMp3(String path) throws UnsupportedAudioFileException, IOException {
+    public void playMp3(String path, JLabel tip ) throws UnsupportedAudioFileException, IOException {
         file = new File(path);
         if (!file.exists() || !path.toLowerCase().endsWith(".mp3")) {
+            tip.setText("文件不存在");
             throw new RuntimeException("文件不存在");
         }
         stream = null;
@@ -169,7 +171,8 @@ public class PlayUtil {
         } catch (Exception e) {
             throw new RuntimeException(e.getMessage());
         } finally {
-            stream.close();
+            if(null!=stream)
+                stream.close();
         }
     }
 
@@ -343,6 +346,7 @@ public class PlayUtil {
             try {
                 data.close();
             } catch (Exception e) {
+                data.close();
                 data = null;
             } finally {
                 data = null;
@@ -352,6 +356,7 @@ public class PlayUtil {
             try {
                 line.close();
             } catch (Exception e) {
+                line.close();
                 line = null;
             } finally {
                 line = null;

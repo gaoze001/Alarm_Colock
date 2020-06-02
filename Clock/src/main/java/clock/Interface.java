@@ -1,10 +1,11 @@
 package clock;
 
-import java.awt.Color;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.*;
+import java.awt.event.*;
+import java.io.IOException;
 import java.text.DateFormat;
 
+import javax.sound.sampled.UnsupportedAudioFileException;
 import javax.swing.*;
 import java.util.Date;
 
@@ -12,13 +13,15 @@ import java.util.Date;
 public class Interface {
 
 	public static JFrame jframe;
-	public JFrame frame;
+	public static JFrame frame;
 	public static JTextField textField,Date,Alarm_clock_hour,Alarm_clock_minute;
 	ImageIcon img;
 	JLabel background;
 	JLabel Alarm_clock_tip,Alarm_clock_Tip,Alarm_clock_Hour,Alarm_clock_Minute;
 	JPanel background_p;
-	
+    private static TrayIcon trayIcon = null;
+    static SystemTray tray = SystemTray.getSystemTray();
+
 	public Boolean control = false;
 	public int time_interval=0;
 	public static int Hour=0,Minute=0;
@@ -27,6 +30,8 @@ public class Interface {
 	DateFormat date = DateFormat.getDateTimeInstance(); 
 	
 	public Count count=new Count();
+
+	private static PlayUtil playUtil = new PlayUtil();
 	
 	//初始化；
 	@SuppressWarnings("deprecation")
@@ -134,7 +139,7 @@ public class Interface {
         Alarm_clock_Tip.setBorder(null);
         frame.getContentPane().add(Alarm_clock_Tip);
         
-        JButton Alarm_Clock = new JButton("开启闹钟");
+        final JButton Alarm_Clock = new JButton("开启闹钟");
         Alarm_Clock.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent arg0) {
             	control = !control;
@@ -161,8 +166,51 @@ public class Interface {
         });
         Alarm_Clock.setBounds(300, 420, 100, 26);
         frame.getContentPane().add(Alarm_Clock);
+        frame.addWindowListener(new WindowAdapter() { // 窗口关闭事件
+            public void windowClosing(WindowEvent e) {
+                System.exit(0);
+            };
+
+            public void windowIconified(WindowEvent e) { // 窗口最小化事件
+
+                frame.setVisible(false);
+                Interface.miniTray();
+
+            }
+
+        });
+
 	}
-	
+    private static void miniTray(){ // 窗口最小化到任务栏托盘
+
+        ImageIcon trayImg = new ImageIcon("");// 托盘图标
+
+        trayIcon = new TrayIcon(trayImg.getImage(), "test", new PopupMenu());
+        trayIcon.setImageAutoSize(true);
+
+        trayIcon.addMouseListener(new MouseAdapter() {
+
+            public void mouseClicked(MouseEvent e) {
+
+                if (e.getClickCount() == 1) {// 单击 1 双击 2
+
+                    tray.remove(trayIcon);
+                    frame.setVisible(true);
+                    frame.setExtendedState(JFrame.NORMAL);
+                    frame.toFront();
+                }
+
+            }
+
+        });
+
+        try {
+            tray.add(trayIcon);
+        } catch (AWTException e1) {
+            e1.printStackTrace();
+        }
+
+    }
 	public static void setTime() {
 		String s="";
 		s=" "+Integer.toString(Time.getHour())+"  :  "
@@ -173,37 +221,48 @@ public class Interface {
 	}
 	
 	public static void AlarmClocks_initialize() {
+
+        try {
+            String path =  Interface.class.getResource("/").getPath()+ "mp.mp3";
+            playUtil.playMp3(path);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
 		jframe = new JFrame();
 		jframe.setBounds(80, 80, 400, 360);
 		jframe.setFocusable(true);
         jframe.getContentPane().setLayout(null);
         jframe.setVisible(true);
-        
-        JLabel tip = new JLabel();
+
+        final JLabel tip = new JLabel();
         tip.setBounds(40, 40, 320, 60);
         tip.setOpaque(false);
         tip.setBorder(null);
         tip.setText("闹钟响了！");
         tip.setFont(new java.awt.Font("Dialog", 1, 50));
         jframe.getContentPane().add(tip);
-        
-        JButton button_MoreSleep = new JButton("贪睡");
+
+        final JButton button_MoreSleep = new JButton("关闭");
         button_MoreSleep.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {                
-                tip.setText("贪睡五分钟！");
-                button_MoreSleep.setVisible(false);
-                if(Minute+5<=59) {
-                	Minute+=5;
-                }
-                else {
-                	if(Hour==23) {
-                		Hour=1;
-                	}
-                	else {
-                		Hour+=1;
-                	}
-                	Minute = Minute+5-59;
-                }
+            public void actionPerformed(ActionEvent e) {
+                playUtil.closeAll();
+//                jframe.getContentPane()
+//                tip.setText("贪睡五分钟！");
+//                button_MoreSleep.setVisible(false);
+//                if(Minute+5<=59) {
+//                	Minute+=5;
+//                }
+//                else {
+//                	if(Hour==23) {
+//                		Hour=1;
+//                	}
+//                	else {
+//                		Hour+=1;
+//                	}
+//                	Minute = Minute+5-59;
+//                }
             }
         });
         button_MoreSleep.setBounds(140, 240, 120, 30);

@@ -138,10 +138,9 @@ public class PlayUtil {
      * @Description: 播放 mp3
      * @date 2019年10月25日 下午12:28:41
      */
-    public void playMp3(String path, JLabel tip ) throws UnsupportedAudioFileException, IOException {
+    public void playMp3(String path) throws UnsupportedAudioFileException, IOException {
         file = new File(path);
         if (!file.exists() || !path.toLowerCase().endsWith(".mp3")) {
-            tip.setText("文件不存在");
             throw new RuntimeException("文件不存在");
         }
         stream = null;

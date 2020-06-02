@@ -8,6 +8,9 @@ import java.text.DateFormat;
 
 import javax.sound.sampled.UnsupportedAudioFileException;
 import javax.swing.*;
+import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 
 
@@ -18,7 +21,7 @@ public class Interface {
     public static JTextField textField, Date, alarmClock_hour, alarmClock_minute;
     ImageIcon img;
     JLabel background;
-    JLabel alarmClockTip, alarmClock_Hour, alarmClock_Minute;
+    JLabel alarmClockTip, alarmClockTextTip, alarmClock_Hour, alarmClock_Minute;
     JPanel background_p;
     private static TrayIcon trayIcon = null;
     static SystemTray tray = SystemTray.getSystemTray();
@@ -33,6 +36,7 @@ public class Interface {
     public Count count = new Count();
 
     private static PlayUtil playUtil = new PlayUtil();
+    private static java.util.List<String> minuteArr = Arrays.asList("9", "19", "29", "39", "49", "59");
 
     //初始化；
     @SuppressWarnings("deprecation")
@@ -50,7 +54,7 @@ public class Interface {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.getContentPane().setLayout(null);
 
-        img = new ImageIcon("D:\\work\\other\\background.png");
+        img = new ImageIcon();
         background = new JLabel(img);
         background_p = new JPanel();
         background_p.setLayout(null);
@@ -78,23 +82,73 @@ public class Interface {
         Date.setText(date.format(now));
         Date.setFont(new java.awt.Font("Dialog", 1, 30));
 
-//        JButton buttonStart = new JButton("开始");
-//        buttonStart.addActionListener(new ActionListener() {
-//            public void actionPerformed(ActionEvent arg0) {
+        JButton buttonStart = new JButton("加10");
+        buttonStart.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent arg0) {
+                Integer m = Integer.parseInt(alarmClock_minute.getText().trim());
+                if (minuteArr.contains(((Integer) (m + 10)).toString())) {
+                    alarmClock_minute.setText(((Integer) (m + 10)).toString());
+                } else {
+                    int index = minuteArr.indexOf(alarmClock_minute.getText().trim());
+                    int x = 1 - (6 - index);
+                    alarmClock_minute.setText(minuteArr.get(x));
+                    Integer integer = Integer.parseInt(alarmClock_hour.getText().trim()) + 1;
+                    alarmClock_hour.setText(integer.toString());
+                }
 //                count.resumeThread();
-//            }
-//        });
-//        buttonStart.setBounds(82, 305, 150, 26);
-//        frame.getContentPane().add(buttonStart);
+            }
+        });
+        buttonStart.setBounds(37, 265, 80, 26);
+        frame.getContentPane().add(buttonStart);
+        JButton subStart = new JButton("减10");
+        subStart.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent arg0) {
+                Integer m = Integer.parseInt(alarmClock_minute.getText().trim());
+                if (minuteArr.contains(((Integer) (m - 10)).toString())) {
+                    alarmClock_minute.setText(((Integer) (m - 10)).toString());
+                } else {
+                    int index = minuteArr.indexOf(alarmClock_minute.getText().trim());
+                    int x = 6 - (index + 1);
+                    alarmClock_minute.setText(minuteArr.get(x));
+                    Integer integer = Integer.parseInt(alarmClock_hour.getText().trim()) - 1;
+                    alarmClock_hour.setText(integer.toString());
+                }
+//                count.resumeThread();
+            }
+        });
+        subStart.setBounds(137, 265, 80, 26);
+        frame.getContentPane().add(subStart);
 
-//        JButton buttonStop = new JButton("暂停");
-//        buttonStop.addActionListener(new ActionListener() {
-//            public void actionPerformed(ActionEvent e) {
+        JButton buttonStop = new JButton("加30");
+        buttonStop.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                Integer m = Integer.parseInt(alarmClock_minute.getText().trim());
+                if (minuteArr.contains(((Integer) (m + 30)).toString())) {
+                    alarmClock_minute.setText(((Integer) (m + 30)).toString());
+                } else {
+                    int index = minuteArr.indexOf(alarmClock_minute.getText().trim());
+                    int x = 3 - (6 - index);
+                    alarmClock_minute.setText(minuteArr.get(x));
+                    Integer integer = Integer.parseInt(alarmClock_hour.getText().trim()) + 1;
+                    alarmClock_hour.setText(integer.toString());
+                }
 //                count.pauseThread();
-//            }
-//        });
-//        buttonStop.setBounds(252, 305, 150, 26);
-//        frame.getContentPane().add(buttonStop);
+            }
+        });
+        buttonStop.setBounds(237, 265, 80, 26);
+        frame.getContentPane().add(buttonStop);
+
+        JButton resbutton = new JButton("重置");
+        resbutton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                LocalTime localNow = LocalTime.now().withNano(0);
+                Time.setHour(localNow.getHour());
+                Time.setMinute(localNow.getMinute());
+                Time.setSecond(localNow.getSecond());
+            }
+        });
+        resbutton.setBounds(337, 265, 80, 26);
+        frame.getContentPane().add(resbutton);
 
         //初始化时间；
         Interface.setTime();
@@ -133,12 +187,12 @@ public class Interface {
         alarmClock_minute.setBorder(null);
         frame.getContentPane().add(alarmClock_minute);
 
-        alarmClockTip = new JLabel("闹钟尚未开启！");
-        alarmClockTip.setBounds(80, 230, 360, 26);
-        alarmClockTip.setFont(new java.awt.Font("Dialog", 1, 15));
-        alarmClockTip.setOpaque(false);
-        alarmClockTip.setBorder(null);
-        frame.getContentPane().add(alarmClockTip);
+        alarmClockTextTip = new JLabel("闹钟尚未开启！");
+        alarmClockTextTip.setBounds(80, 230, 360, 26);
+        alarmClockTextTip.setFont(new java.awt.Font("Dialog", 1, 15));
+        alarmClockTextTip.setOpaque(false);
+        alarmClockTextTip.setBorder(null);
+        frame.getContentPane().add(alarmClockTextTip);
 
         final JButton alarmClock = new JButton("开启闹钟");
         alarmClock.addActionListener(new ActionListener() {
@@ -152,14 +206,14 @@ public class Interface {
                         Minute = Integer.parseInt(str_minute);
                         alarmClock.setText("关闭闹钟");
                         count.Window = true;
-                        alarmClockTip.setText("闹钟已开启！");
+                        alarmClockTextTip.setText("闹钟已开启！");
                     } else {
-                        alarmClockTip.setText("输入有误，请重新输入！");
+                        alarmClockTextTip.setText("输入有误，请重新输入！");
                         control = !control;
                     }
                 } else {
                     alarmClock.setText("开启闹钟");
-                    alarmClockTip.setText("闹钟已关闭！");
+                    alarmClockTextTip.setText("闹钟已关闭！");
                     playUtil.closeAll();
                 }
             }
@@ -170,8 +224,6 @@ public class Interface {
             public void windowClosing(WindowEvent e) {
                 System.exit(0);
             }
-
-            ;
 
             public void windowIconified(WindowEvent e) { // 窗口最小化事件
                 frame.setVisible(false);
@@ -185,11 +237,9 @@ public class Interface {
 
     private static void miniTray() { // 窗口最小化到任务栏托盘
 
-        ImageIcon trayImg = new ImageIcon("D:\\work\\other\\background.png");// 托盘图标
-
-        trayIcon = new TrayIcon(trayImg.getImage(), "test", new PopupMenu());
+        ImageIcon trayImg = new ImageIcon("D:\\background.png");// 托盘图标
+        trayIcon = new TrayIcon(trayImg.getImage(), "闹铃", new PopupMenu());
         trayIcon.setImageAutoSize(true);
-
         trayIcon.addMouseListener(new MouseAdapter() {
             public void mouseClicked(MouseEvent e) {
                 if (e.getClickCount() == 1) {// 单击 1 双击 2
@@ -198,11 +248,8 @@ public class Interface {
                     frame.setExtendedState(JFrame.NORMAL);
                     frame.toFront();
                 }
-
             }
-
         });
-
         try {
             tray.add(trayIcon);
         } catch (AWTException e1) {
@@ -233,12 +280,6 @@ public class Interface {
         tip.setBounds(40, 40, 1320, 60);
         tip.setOpaque(false);
         tip.setBorder(null);
-//        String path =  Interface.class.getResource("/").getPath()+ "mp.mp3";
-//        String path=System.getProperty("java.class.path");
-//        int lastIndex = path.lastIndexOf("\\") + 1;
-//        path = path.substring(0, lastIndex);
-//        String path = System.getProperty("user.dir");
-//        tip.setText(path);
         tip.setText("闹钟响了！");
         tip.setFont(new java.awt.Font("Dialog", 1, 10));
         jframe.getContentPane().add(tip);
@@ -252,11 +293,17 @@ public class Interface {
         button_MoreSleep.setBounds(140, 240, 120, 30);
         jframe.getContentPane().add(button_MoreSleep);
         try {
-//            String path =  Interface.class.getResource("/").getPath()+ "mp.mp3";
-//            tip.setText(path);
-//            File file = new File(Thread.currentThread().getContextClassLoader().getResource("mp.mp3").getFile());
-            playUtil.playMp3("D:\\work\\other\\mp.mp3",tip);
-
+            Integer m = Integer.parseInt(alarmClock_minute.getText().trim());
+            if (minuteArr.contains(((Integer) (m + 30)).toString())) {
+                alarmClock_minute.setText(((Integer) (m + 30)).toString());
+            } else {
+                int index = minuteArr.indexOf(alarmClock_minute.getText().trim());
+                int x = 3 - (6 - index);
+                alarmClock_minute.setText(minuteArr.get(x));
+                Integer integer = Integer.parseInt(alarmClock_hour.getText().trim()) + 1;
+                alarmClock_hour.setText(integer.toString());
+            }
+            playUtil.playMp3("D:\\mp.mp3");
         } catch (Exception e) {
             e.printStackTrace();
         }

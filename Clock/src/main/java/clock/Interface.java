@@ -14,10 +14,10 @@ public class Interface {
 
 	public static JFrame jframe;
 	public static JFrame frame;
-	public static JTextField textField,Date,Alarm_clock_hour,Alarm_clock_minute;
+	public static JTextField textField,Date,alarmClock_hour,alarmClock_minute;
 	ImageIcon img;
 	JLabel background;
-	JLabel Alarm_clock_tip,Alarm_clock_Tip,Alarm_clock_Hour,Alarm_clock_Minute;
+	JLabel alarmClockTip,alarmClockTip,alarmClock_Hour,alarmClock_Minute;
 	JPanel background_p;
     private static TrayIcon trayIcon = null;
     static SystemTray tray = SystemTray.getSystemTray();
@@ -77,102 +77,101 @@ public class Interface {
         Date.setText("2019-9-1");
         Date.setFont(new java.awt.Font("Dialog", 1, 30));
         
-        JButton button_start = new JButton("开始");
-        button_start.addActionListener(new ActionListener() {
+        JButton buttonStart = new JButton("开始");
+        buttonStart.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent arg0) {
             	count.resumeThread();
             }
         });
-        button_start.setBounds(82, 305, 150, 26);
-        frame.getContentPane().add(button_start);
+        buttonStart.setBounds(82, 305, 150, 26);
+        frame.getContentPane().add(buttonStart);
         
-        JButton button_stop = new JButton("暂停");
-        button_stop.addActionListener(new ActionListener() {
+        JButton buttonStop = new JButton("暂停");
+        buttonStop.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {                
                 count.pauseThread();             
             }
         });
-        button_stop.setBounds(252, 305, 150, 26);
-        frame.getContentPane().add(button_stop);
+        buttonStop.setBounds(252, 305, 150, 26);
+        frame.getContentPane().add(buttonStop);
         
         //初始化时间；
         Interface.setTime();
         
         //闹钟功能块；
-        Alarm_clock_tip = new JLabel("请依次输入闹钟的时分，并按“开启闹钟”开启！");
-        Alarm_clock_tip.setBounds(80, 360, 360, 26);
-        Alarm_clock_tip.setFont(new java.awt.Font("Dialog", 1, 15));
-        Alarm_clock_tip.setOpaque(false);
-        Alarm_clock_tip.setBorder(null);
-        frame.getContentPane().add(Alarm_clock_tip);
+        alarmClockTip = new JLabel("请依次输入闹钟的时分，并按“开启闹钟”开启！");
+        alarmClockTip.setBounds(80, 360, 360, 26);
+        alarmClockTip.setFont(new java.awt.Font("Dialog", 1, 15));
+        alarmClockTip.setOpaque(false);
+        alarmClockTip.setBorder(null);
+        frame.getContentPane().add(alarmClockTip);
         
-        Alarm_clock_Hour =new JLabel("时：");
-        Alarm_clock_Hour.setBounds(80, 420, 40, 26);
-        Alarm_clock_Hour.setFont(new java.awt.Font("Dialog", 1, 15));
-        Alarm_clock_Hour.setOpaque(false);
-        Alarm_clock_Hour.setBorder(null);
-        frame.getContentPane().add(Alarm_clock_Hour);
+        alarmClock_Hour =new JLabel("时：");
+        alarmClock_Hour.setBounds(80, 420, 40, 26);
+        alarmClock_Hour.setFont(new java.awt.Font("Dialog", 1, 15));
+        alarmClock_Hour.setOpaque(false);
+        alarmClock_Hour.setBorder(null);
+        frame.getContentPane().add(alarmClock_Hour);
         
-        Alarm_clock_hour = new JTextField("Null");
-        Alarm_clock_hour.setBounds(120, 420, 60, 26);
-        Alarm_clock_hour.setFont(new java.awt.Font("Dialog", 1, 15));
-        Alarm_clock_hour.setBorder(null);
-        frame.getContentPane().add(Alarm_clock_hour);
+        alarmClock_hour = new JTextField("Null");
+        alarmClock_hour.setBounds(120, 420, 60, 26);
+        alarmClock_hour.setFont(new java.awt.Font("Dialog", 1, 15));
+        alarmClock_hour.setBorder(null);
+        frame.getContentPane().add(alarmClock_hour);
         
-        Alarm_clock_Minute =new JLabel("分：");
-        Alarm_clock_Minute.setBounds(190, 420, 40, 26);
-        Alarm_clock_Minute.setFont(new java.awt.Font("Dialog", 1, 15));
-        Alarm_clock_Minute.setOpaque(false);
-        Alarm_clock_Minute.setBorder(null);
-        frame.getContentPane().add(Alarm_clock_Minute);
+        alarmClock_Minute =new JLabel("分：");
+        alarmClock_Minute.setBounds(190, 420, 40, 26);
+        alarmClock_Minute.setFont(new java.awt.Font("Dialog", 1, 15));
+        alarmClock_Minute.setOpaque(false);
+        alarmClock_Minute.setBorder(null);
+        frame.getContentPane().add(alarmClock_Minute);
         
-        Alarm_clock_minute = new JTextField("Null");
-        Alarm_clock_minute.setBounds(230, 420, 60, 26);
-        Alarm_clock_minute.setFont(new java.awt.Font("Dialog", 1, 15));
-        Alarm_clock_minute.setBorder(null);
-        frame.getContentPane().add(Alarm_clock_minute);
+        alarmClock_minute = new JTextField("Null");
+        alarmClock_minute.setBounds(230, 420, 60, 26);
+        alarmClock_minute.setFont(new java.awt.Font("Dialog", 1, 15));
+        alarmClock_minute.setBorder(null);
+        frame.getContentPane().add(alarmClock_minute);
         
-        Alarm_clock_Tip = new JLabel("闹钟尚未开启！");
-        Alarm_clock_Tip.setBounds(80, 480, 360, 26);
-        Alarm_clock_Tip.setFont(new java.awt.Font("Dialog", 1, 15));
-        Alarm_clock_Tip.setOpaque(false);
-        Alarm_clock_Tip.setBorder(null);
-        frame.getContentPane().add(Alarm_clock_Tip);
+        alarmClockTip = new JLabel("闹钟尚未开启！");
+        alarmClockTip.setBounds(80, 480, 360, 26);
+        alarmClockTip.setFont(new java.awt.Font("Dialog", 1, 15));
+        alarmClockTip.setOpaque(false);
+        alarmClockTip.setBorder(null);
+        frame.getContentPane().add(alarmClockTip);
         
-        final JButton Alarm_Clock = new JButton("开启闹钟");
-        Alarm_Clock.addActionListener(new ActionListener() {
+        final JButton alarmClock = new JButton("开启闹钟");
+        alarmClock.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent arg0) {
             	control = !control;
             	if(control) {
-            		if(!Alarm_clock_hour.getText().equals("Null")&&!Alarm_clock_minute.getText().equals("Null")) {
-            			String str_hour = Alarm_clock_hour.getText();
+            		if(!alarmClock_hour.getText().equals("Null")&&!alarmClock_minute.getText().equals("Null")) {
+            			String str_hour = alarmClock_hour.getText();
                 		Hour = Integer.parseInt(str_hour);
-                		String str_minute = Alarm_clock_minute.getText();
+                		String str_minute = alarmClock_minute.getText();
                 		Minute = Integer.parseInt(str_minute);
-                		Alarm_Clock.setText("关闭闹钟");
+                		alarmClock.setText("关闭闹钟");
                 		count.Window = true;
-                		Alarm_clock_Tip.setText("闹钟已开启！");
+                		alarmClockTip.setText("闹钟已开启！");
             		}
             		else {
-            			Alarm_clock_Tip.setText("输入有误，请重新输入！");
+            			alarmClockTip.setText("输入有误，请重新输入！");
             			control = !control;
             		}
             	}
             	else {
-            		Alarm_Clock.setText("开启闹钟");
-            		Alarm_clock_Tip.setText("闹钟已关闭！");
+            		alarmClock.setText("开启闹钟");
+            		alarmClockTip.setText("闹钟已关闭！");
+                    playUtil.closeAll();
             	}
             }
         });
-        Alarm_Clock.setBounds(300, 420, 100, 26);
-        frame.getContentPane().add(Alarm_Clock);
+        alarmClock.setBounds(300, 420, 100, 26);
+        frame.getContentPane().add(alarmClock);
         frame.addWindowListener(new WindowAdapter() { // 窗口关闭事件
             public void windowClosing(WindowEvent e) {
                 System.exit(0);
             };
-
             public void windowIconified(WindowEvent e) { // 窗口最小化事件
-
                 frame.setVisible(false);
                 Interface.miniTray();
 
@@ -183,17 +182,14 @@ public class Interface {
 	}
     private static void miniTray(){ // 窗口最小化到任务栏托盘
 
-        ImageIcon trayImg = new ImageIcon("");// 托盘图标
+        ImageIcon trayImg = new ImageIcon("background.png");// 托盘图标
 
         trayIcon = new TrayIcon(trayImg.getImage(), "test", new PopupMenu());
         trayIcon.setImageAutoSize(true);
 
         trayIcon.addMouseListener(new MouseAdapter() {
-
             public void mouseClicked(MouseEvent e) {
-
                 if (e.getClickCount() == 1) {// 单击 1 双击 2
-
                     tray.remove(trayIcon);
                     frame.setVisible(true);
                     frame.setExtendedState(JFrame.NORMAL);
@@ -222,13 +218,7 @@ public class Interface {
 	
 	public static void AlarmClocks_initialize() {
 
-        try {
-            String path =  Interface.class.getResource("/").getPath()+ "mp.mp3";
-            playUtil.playMp3(path);
 
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
 
 		jframe = new JFrame();
 		jframe.setBounds(80, 80, 400, 360);
@@ -267,7 +257,13 @@ public class Interface {
         });
         button_MoreSleep.setBounds(140, 240, 120, 30);
         jframe.getContentPane().add(button_MoreSleep);
-        
+        try {
+            String path =  Interface.class.getResource("/").getPath()+ "mp.mp3";
+            playUtil.playMp3(path);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 	}
 	
 	public void upDate() {

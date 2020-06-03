@@ -368,7 +368,7 @@ class Count extends Thread {
             try {
                 Time.run();
                 Interface.setTime();
-                if (Window && Interface.Hour == Time.h && Interface.Minute == Time.m && Time.s == 45) {
+                if (Window && Interface.Hour == Time.h && Interface.Minute == Time.m && Time.s == 15) {
                     //System.out.println("ƒ÷÷”œÏ¡À");
                     Interface.AlarmClocks_initialize();
                 }

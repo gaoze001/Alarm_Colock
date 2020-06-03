@@ -168,7 +168,7 @@ public class PlayUtil {
             line.stop();
             line.close();
         } catch (Exception e) {
-            throw new RuntimeException(e.getMessage());
+//            throw new RuntimeException(e.getMessage());
         } finally {
             if(null!=stream)
                 stream.close();

@@ -8,6 +8,7 @@ import java.text.DateFormat;
 
 import javax.sound.sampled.UnsupportedAudioFileException;
 import javax.swing.*;
+import javax.swing.event.DocumentEvent;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -172,6 +173,22 @@ public class Interface {
         alarmClock_hour.setBounds(120, 200, 60, 26);
         alarmClock_hour.setFont(new java.awt.Font("Dialog", 1, 15));
         alarmClock_hour.setBorder(null);
+        alarmClock_hour.getDocument().addDocumentListener(new javax.swing.event.DocumentListener() {
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                String str_hour = alarmClock_hour.getText().trim();
+                Hour = Integer.parseInt(str_hour);
+                System.out.println("Hour:" + Hour);
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+            }
+        });
         frame.getContentPane().add(alarmClock_hour);
 
         alarmClock_Minute = new JLabel("·Ö£º");
@@ -185,6 +202,22 @@ public class Interface {
         alarmClock_minute.setBounds(230, 200, 60, 26);
         alarmClock_minute.setFont(new java.awt.Font("Dialog", 1, 15));
         alarmClock_minute.setBorder(null);
+        alarmClock_minute.getDocument().addDocumentListener(new javax.swing.event.DocumentListener() {
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                String str_minute = alarmClock_minute.getText();
+                Minute = Integer.parseInt(str_minute);
+                System.out.println("Minute:" + Minute);
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+            }
+        });
         frame.getContentPane().add(alarmClock_minute);
 
         alarmClockTextTip = new JLabel("ÄÖÖÓÉÐÎ´¿ªÆô£¡");
@@ -287,6 +320,7 @@ public class Interface {
         final JButton button_MoreSleep = new JButton("¹Ø±Õ");
         button_MoreSleep.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
+                jframe.setVisible(false);
                 playUtil.closeAll();
             }
         });

@@ -19,7 +19,9 @@ public class Interface {
 
     public static JFrame jframe;
     public static JFrame frame;
-    public static JTextField textField, Date, alarmClock_hour, alarmClock_minute;
+    public static JTabbedPane jTabbedPane;
+    public static JPanel jPanel,goodsPanel;
+    public static JTextField textField, date, alarmClock_hour, alarmClock_minute;
     ImageIcon img;
     JLabel background;
     JLabel alarmClockTip, alarmClockTextTip, alarmClock_Hour, alarmClock_Minute;
@@ -32,7 +34,7 @@ public class Interface {
     public static int Hour = 0, Minute = 0;
 
     Date now = new Date();
-    DateFormat date = DateFormat.getDateTimeInstance();
+    DateFormat dateFromat = DateFormat.getDateTimeInstance();
 
     public Count count = new Count();
 
@@ -49,11 +51,19 @@ public class Interface {
     }
 
     private void initialize() {
+        jTabbedPane = new JTabbedPane();
+        jPanel = new JPanel();
+        goodsPanel = new JPanel();
         frame = new JFrame("简易时钟");
-        frame.setBounds(100, 100, 480, 350);
+        jTabbedPane.addTab("闹铃",jPanel);
+        jTabbedPane.addTab("物价",goodsPanel);
+        frame.setContentPane(jTabbedPane);
+        initRegionPanel(goodsPanel);
+        frame.setBounds(100, 100, 480, 380);
         frame.setFocusable(true);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.getContentPane().setLayout(null);
+        jPanel.setLayout(null);
+        jPanel.setBounds(100, 100, 480, 350);
 
         img = new ImageIcon();
         background = new JLabel(img);
@@ -63,25 +73,25 @@ public class Interface {
         background.setBounds(0, 0, 480, 350);
         background_p.setOpaque(false);
         background_p.add(background);
-        frame.getContentPane().add(background_p);
+        jPanel.add(background_p);
 
         textField = new JTextField();
         textField.setBounds(70, 98, 344, 80);
-        frame.getContentPane().add(textField);
+        jPanel.add(textField);
         textField.setColumns(10);
         textField.setBackground(Color.white);
         textField.setOpaque(false);
         textField.setBorder(null);
         textField.setFont(new java.awt.Font("Dialog", 1, 50));
 
-        JTextField Date = new JTextField();
-        Date.setBounds(70, 48, 250, 50);
-        frame.getContentPane().add(Date);
-        Date.setBackground(Color.white);
-        Date.setOpaque(false);
-        Date.setBorder(null);
-        Date.setText(date.format(now));
-        Date.setFont(new java.awt.Font("Dialog", 1, 30));
+        date = new JTextField();
+        date.setBounds(70, 48, 250, 50);
+        jPanel.add(date);
+        date.setBackground(Color.white);
+        date.setOpaque(false);
+        date.setBorder(null);
+        date.setText(dateFromat.format(now));
+        date.setFont(new java.awt.Font("Dialog", 1, 30));
 
         JButton buttonStart = new JButton("加10");
         buttonStart.addActionListener(new ActionListener() {
@@ -100,7 +110,7 @@ public class Interface {
             }
         });
         buttonStart.setBounds(37, 265, 80, 26);
-        frame.getContentPane().add(buttonStart);
+        jPanel.add(buttonStart);
         JButton subStart = new JButton("减10");
         subStart.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent arg0) {
@@ -118,7 +128,7 @@ public class Interface {
             }
         });
         subStart.setBounds(137, 265, 80, 26);
-        frame.getContentPane().add(subStart);
+        jPanel.add(subStart);
 
         JButton buttonStop = new JButton("加30");
         buttonStop.addActionListener(new ActionListener() {
@@ -137,7 +147,7 @@ public class Interface {
             }
         });
         buttonStop.setBounds(237, 265, 80, 26);
-        frame.getContentPane().add(buttonStop);
+        jPanel.add(buttonStop);
 
         JButton resbutton = new JButton("重置");
         resbutton.addActionListener(new ActionListener() {
@@ -149,7 +159,7 @@ public class Interface {
             }
         });
         resbutton.setBounds(337, 265, 80, 26);
-        frame.getContentPane().add(resbutton);
+        jPanel.add(resbutton);
 
         //初始化时间；
         Interface.setTime();
@@ -160,14 +170,14 @@ public class Interface {
         alarmClockTip.setFont(new java.awt.Font("Dialog", 1, 15));
         alarmClockTip.setOpaque(false);
         alarmClockTip.setBorder(null);
-        frame.getContentPane().add(alarmClockTip);
+        jPanel.add(alarmClockTip);
 
         alarmClock_Hour = new JLabel("时：");
         alarmClock_Hour.setBounds(80, 200, 40, 26);
         alarmClock_Hour.setFont(new java.awt.Font("Dialog", 1, 15));
         alarmClock_Hour.setOpaque(false);
         alarmClock_Hour.setBorder(null);
-        frame.getContentPane().add(alarmClock_Hour);
+        jPanel.add(alarmClock_Hour);
 
         alarmClock_hour = new JTextField();
         alarmClock_hour.setBounds(120, 200, 60, 26);
@@ -189,14 +199,14 @@ public class Interface {
             public void changedUpdate(DocumentEvent e) {
             }
         });
-        frame.getContentPane().add(alarmClock_hour);
+        jPanel.add(alarmClock_hour);
 
         alarmClock_Minute = new JLabel("分：");
         alarmClock_Minute.setBounds(190, 200, 40, 26);
         alarmClock_Minute.setFont(new java.awt.Font("Dialog", 1, 15));
         alarmClock_Minute.setOpaque(false);
         alarmClock_Minute.setBorder(null);
-        frame.getContentPane().add(alarmClock_Minute);
+        jPanel.add(alarmClock_Minute);
 
         alarmClock_minute = new JTextField();
         alarmClock_minute.setBounds(230, 200, 60, 26);
@@ -218,14 +228,14 @@ public class Interface {
             public void changedUpdate(DocumentEvent e) {
             }
         });
-        frame.getContentPane().add(alarmClock_minute);
+        jPanel.add(alarmClock_minute);
 
         alarmClockTextTip = new JLabel("闹钟尚未开启！");
         alarmClockTextTip.setBounds(80, 230, 360, 26);
         alarmClockTextTip.setFont(new java.awt.Font("Dialog", 1, 15));
         alarmClockTextTip.setOpaque(false);
         alarmClockTextTip.setBorder(null);
-        frame.getContentPane().add(alarmClockTextTip);
+        jPanel.add(alarmClockTextTip);
 
         final JButton alarmClock = new JButton("开启闹钟");
         alarmClock.addActionListener(new ActionListener() {
@@ -252,7 +262,8 @@ public class Interface {
             }
         });
         alarmClock.setBounds(300, 200, 100, 26);
-        frame.getContentPane().add(alarmClock);
+        jPanel.add(alarmClock);
+
         frame.addWindowListener(new WindowAdapter() { // 窗口关闭事件
             public void windowClosing(WindowEvent e) {
                 System.exit(0);
@@ -291,6 +302,17 @@ public class Interface {
 
     }
 
+    public static void initRegionPanel(JPanel jPanelGoods){
+        jPanelGoods.setLayout(null);
+        jPanelGoods.setBounds(100, 100, 480, 350);
+
+        JLabel background_p = new JLabel("123");
+        background_p.setLayout(null);
+        background_p.setBounds(0, 0, 480, 350);
+        background_p.setOpaque(false);
+        jPanelGoods.add(background_p);
+
+    }
     public static void setTime() {
         String s = "";
         s = " " + Integer.toString(Time.getHour()) + "  :  "
@@ -345,8 +367,8 @@ public class Interface {
 
     public void upDate() {
         now = new Date();
-        String s = date.format(now);
-        Date.setText(s);
+        String s = dateFromat.format(now);
+        date.setText(s);
     }
 }
 

@@ -25,7 +25,7 @@ public class Interface {
     public static JFrame jframe;
     public static JFrame frame;
     public static JTabbedPane jTabbedPane;
-    public static JPanel jPanel,goodsPanel;
+    public static JPanel jPanel, goodsPanel;
     public static JTextField textField, date, alarmClock_hour, alarmClock_minute;
     ImageIcon img;
     JLabel background;
@@ -60,8 +60,8 @@ public class Interface {
         jPanel = new JPanel();
         goodsPanel = new JPanel();
         frame = new JFrame("简易时钟");
-        jTabbedPane.addTab("闹铃",jPanel);
-        jTabbedPane.addTab("物价",goodsPanel);
+        jTabbedPane.addTab("闹铃", jPanel);
+        jTabbedPane.addTab("物价", goodsPanel);
         frame.setContentPane(jTabbedPane);
         try {
             initRegionPanel(goodsPanel);
@@ -311,7 +311,7 @@ public class Interface {
 
     }
 
-    public static void initRegionPanel(JPanel jPanelGoods) throws Exception{
+    public static void initRegionPanel(JPanel jPanelGoods) throws Exception {
         jPanelGoods.setLayout(null);
         jPanelGoods.setBounds(100, 100, 480, 350);
 
@@ -322,8 +322,8 @@ public class Interface {
         jLabelRegion.setBorder(null);
         jPanelGoods.add(jLabelRegion);
         SqliteUtil sqliteUtil = new SqliteUtil();
-        List<String> regionList =sqliteUtil.queryAllRegion();
-        JComboBox  jComboBoxRegion = new JComboBox (regionList.toArray());
+        List<String> regionList = sqliteUtil.queryAllRegion();
+        JComboBox jComboBoxRegion = new JComboBox(regionList.toArray());
         jComboBoxRegion.setBounds(60, 10, 80, 26);
         jPanelGoods.add(jComboBoxRegion);
         JLabel jLabelArea = new JLabel("小区：");
@@ -332,22 +332,22 @@ public class Interface {
         jLabelArea.setOpaque(false);
         jLabelArea.setBorder(null);
         jPanelGoods.add(jLabelArea);
-        JComboBox  jComboBoxArea = new JComboBox (regionList.toArray());
+        JComboBox jComboBoxArea = new JComboBox(regionList.toArray());
         jComboBoxArea.setBounds(190, 10, 80, 26);
         jPanelGoods.add(jComboBoxArea);
 
-        Map<String,String> regionMap = new HashMap<>();
+        Map<String, String> regionMap = new HashMap<>();
         jComboBoxRegion.addItemListener(new ItemListener() {
             public void itemStateChanged(ItemEvent e) {
                 if (e.getStateChange() == ItemEvent.SELECTED) {
                     try {
-                        List<RegionVo> regionAreaList =sqliteUtil.queryAreaByRegion(e.getItem().toString());
-                        regionAreaList.forEach(i->{
-                            regionMap.put(i.getArea(),i.getRegionCode());
+                        List<RegionVo> regionAreaList = sqliteUtil.queryAreaByRegion(e.getItem().toString());
+                        regionAreaList.forEach(i -> {
+                            regionMap.put(i.getArea(), i.getRegionCode());
                         });
                         List<String> areaList = regionAreaList.stream().map(RegionVo::getArea).collect(Collectors.toList());
                         jComboBoxArea.removeAllItems();
-                        areaList.forEach(x->{
+                        areaList.forEach(x -> {
                             jComboBoxArea.addItem(x);
                         });
                     } catch (Exception ex) {
@@ -356,12 +356,55 @@ public class Interface {
                 }
             }
         });
+        Vector vect = new Vector();//实例化向量
+        AbstractTableModel dataModel = new AbstractTableModel() {
+            final String[] title = {"物品名", "价格", "数量"};
+
+            public int getColumnCount() {
+                return title.length;
+            }
+
+            public int getRowCount() {
+                return vect.size();
+            }
+
+            public Object getValueAt(int row, int column) {
+                if (!vect.isEmpty())
+                    return ((Vector) vect.elementAt(row)).elementAt(column);
+                else
+                    return null;
+            }
+
+            public String getColumnName(int column) {
+                return title[column];
+            }
+
+            public void setValueAt(Object value, int row, int column) {
+            }
+
+            public Class getColumnClass(int c) {
+                return getValueAt(0, c).getClass();
+            }
+
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        };
 
         jComboBoxArea.addItemListener(new ItemListener() {
             public void itemStateChanged(ItemEvent e) {
                 if (e.getStateChange() == ItemEvent.SELECTED) {
                     try {
-                        List<PriceVo> regionList =sqliteUtil.queryPriceByRegion(regionMap.get(e.getItem()));
+                        List<PriceVo> regionList = sqliteUtil.queryPriceByRegion(regionMap.get(e.getItem()));
+                        vect.removeAllElements();//初始化向量对象
+                        regionList.forEach(i -> {
+                            Vector rec_vector = new Vector();
+                            rec_vector.addElement(i.getItemName());
+                            rec_vector.addElement(i.getItemPrice());
+                            rec_vector.addElement(i.getItemNum());
+                            vect.addElement(rec_vector);
+                        });
+                        dataModel.fireTableStructureChanged();
                     } catch (Exception ex) {
                         ex.printStackTrace();
                     }
@@ -383,12 +426,12 @@ public class Interface {
         textAreaField.setToolTipText("小区");
         textAreaField.setFont(new java.awt.Font("Dialog", 1, 15));
 
-        final JButton addRegion= new JButton("加区");
+        final JButton addRegion = new JButton("加区");
         addRegion.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent arg0) {
                 String regionText = textRegionField.getText();
                 String areaText = textAreaField.getText();
-                if(StringUtil.isEmpty(regionText)||StringUtil.isEmpty(areaText))
+                if (StringUtil.isEmpty(regionText) || StringUtil.isEmpty(areaText))
                     return;
                 String regionCode = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
                 RegionVo regionVo = new RegionVo();
@@ -406,74 +449,58 @@ public class Interface {
         });
         addRegion.setBounds(390, 10, 80, 26);
         jPanelGoods.add(addRegion);
-        final String[] title = { "物品名", "价格", "数量"};
-        StudentTableModel dataModel = new StudentTableModel();
-        JTable table= new JTable(dataModel);
+
+        JTextField textItemNameField = new JTextField();
+        textItemNameField.setBounds(10, 40, 60, 26);
+        jPanelGoods.add(textItemNameField);
+        textItemNameField.setColumns(10);
+        textItemNameField.setToolTipText("物品名");
+        textItemNameField.setFont(new java.awt.Font("Dialog", 1, 15));
+
+        JTextField textItemPriceField = new JTextField();
+        textItemPriceField.setBounds(70, 40, 60, 26);
+        jPanelGoods.add(textItemPriceField);
+        textItemPriceField.setColumns(10);
+        textItemPriceField.setToolTipText("物品价格");
+        textItemPriceField.setFont(new java.awt.Font("Dialog", 1, 15));
+
+        JTextField textItemNumField = new JTextField();
+        textItemNumField.setBounds(130, 40, 60, 26);
+        jPanelGoods.add(textItemNumField);
+        textItemNumField.setColumns(10);
+        textItemNumField.setToolTipText("物品数量");
+        textItemNumField.setFont(new java.awt.Font("Dialog", 1, 15));
+
+        final JButton addPrice = new JButton("加物");
+        addPrice.setBounds(190, 40, 80, 26);
+        jPanelGoods.add(addPrice);
+        addPrice.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent arg0) {
+                String itemName = textItemNameField.getText();
+                String itemPrice = textItemPriceField.getText();
+                String itemNum = textItemNumField.getText();
+                if (StringUtil.isEmpty(itemName) || StringUtil.isEmpty(itemPrice) || StringUtil.isEmpty(itemNum))
+                    return;
+                PriceVo priceVo = new PriceVo();
+                priceVo.setItemNum(Integer.parseInt(itemNum));
+                priceVo.setItemPrice(Integer.parseInt(itemPrice));
+                priceVo.setItemName(itemName);
+                priceVo.setRegionCode(regionMap.get(jComboBoxArea.getSelectedItem()));
+                try {
+                    sqliteUtil.insertPrice(priceVo);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+
+
+        JTable table = new JTable(dataModel);
         JScrollPane scrollpane = new JScrollPane(table);
-        scrollpane.setBounds(10,50,440,320);
+        scrollpane.setBounds(10, 70, 140, 250);
         jPanelGoods.add(scrollpane);
     }
 
-    static class StudentTableModel extends AbstractTableModel {
-        List<PriceVo> priceList = new ArrayList();
-        public void setPrice(final List<PriceVo> list){
-            //invokeLater()方法:导致 doRun.run() 在 AWT 事件指派线程上异步执行。在所有挂起的 AWT 事件被处理后才发生。
-            //此方法应该在应用程序线程需要更新该 GUI 时使用
-            SwingUtilities.invokeLater(new Runnable(){
-
-                public void run() {
-                    priceList = list;
-                    fireTableDataChanged();  //通知JTable数据对象已更改,重绘界面
-                }
-
-            });
-
-        }
-        public int getColumnCount() {
-            return 3;
-        }
-        public int getRowCount() {
-            return priceList.size();
-        }
-        public Object getValueAt(int rowIndex, int columnIndex) {
-            PriceVo priceVo = priceList.get(rowIndex);
-            switch (columnIndex) {
-                case 0:
-                    return priceVo.getItemName();
-                case 1:
-                    return priceVo.getItemPrice();
-                case 2:
-                    return priceVo.getItemNum();
-                default:
-                    break;
-            }
-            return null;
-        }
-    }
-
-//    public static AbstractTableModel getTableModel(String regionCode) {
-//
-//        try {
-//            return new AbstractTableModel() {
-//                SqliteUtil sqliteUtil = new SqliteUtil();
-//                List<PriceVo> regionList =sqliteUtil.queryPriceByRegion(regionCode);
-//                public int getColumnCount() {
-//                    return 3;
-//                }
-//
-//                @Override
-//                public Object getValueAt(int rowIndex, int columnIndex) {
-//                    return null;
-//                }
-//
-//                public int getRowCount() {
-//                    return regionList.size();
-//                }
-//            };
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//    }
 
     public static void setTime() {
         String s = "";

@@ -31,16 +31,14 @@ public class SqliteUtil {
         stmt.close();
         conn.close();
     }
-    public void insertPrice(List<PriceVo> PriceVo)throws Exception{
+    public void insertPrice(PriceVo priceVo)throws Exception{
         Connection conn = DriverManager.getConnection("jdbc:sqlite:zking.db");
         Statement stmt = conn.createStatement();
-        PriceVo.forEach(i->{
             try {
-                stmt.executeUpdate("INSERT INTO price VALUES('"+i.getItemName()+"', '"+i.getItemPrice()+"','"+i.getRegionCode()+"','"+i.getItemNum()+"')");
+                stmt.executeUpdate("INSERT INTO price VALUES('"+priceVo.getItemName()+"', '"+priceVo.getItemPrice()+"','"+priceVo.getRegionCode()+"','"+priceVo.getItemNum()+"')");
             } catch (SQLException e) {
                 e.printStackTrace();
             }
-        });
         stmt.close();
         conn.close();
     }

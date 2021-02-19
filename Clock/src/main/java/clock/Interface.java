@@ -411,85 +411,78 @@ public class Interface {
                 }
             }
         });
+        JTextField textRegionField = new JTextField(8);
+        JTextField textAreaField = new JTextField(8);
 
-        JTextField textRegionField = new JTextField();
-        textRegionField.setBounds(270, 10, 60, 26);
-        jPanelGoods.add(textRegionField);
-        textRegionField.setColumns(10);
-        textRegionField.setToolTipText("大区");
-        textRegionField.setFont(new java.awt.Font("Dialog", 1, 15));
-
-        JTextField textAreaField = new JTextField();
-        textAreaField.setBounds(330, 10, 60, 26);
-        jPanelGoods.add(textAreaField);
-        textAreaField.setColumns(10);
-        textAreaField.setToolTipText("小区");
-        textAreaField.setFont(new java.awt.Font("Dialog", 1, 15));
+        JPanel regionPanel = new JPanel();
+        regionPanel.add(new JLabel("大区:"));
+        regionPanel.add(textRegionField);
+        regionPanel.add(Box.createHorizontalStrut(15)); // a spacer
+        regionPanel.add(new JLabel("小区:"));
+        regionPanel.add(textAreaField);
 
         final JButton addRegion = new JButton("加区");
         addRegion.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent arg0) {
-                String regionText = textRegionField.getText();
-                String areaText = textAreaField.getText();
-                if (StringUtil.isEmpty(regionText) || StringUtil.isEmpty(areaText))
-                    return;
-                String regionCode = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
-                RegionVo regionVo = new RegionVo();
-                regionVo.setRegion(regionText);
-                regionVo.setArea(areaText);
-                regionVo.setRegionCode(regionCode);
-                List<RegionVo> regionVos = new ArrayList<>();
-                regionVos.add(regionVo);
-                try {
-                    sqliteUtil.insertRegion(regionVos);
-                } catch (Exception e) {
-                    e.printStackTrace();
+                int result = JOptionPane.showConfirmDialog(null, regionPanel,
+                        "Please Enter X and Y Values", JOptionPane.OK_CANCEL_OPTION);
+                if (result == JOptionPane.OK_OPTION) {
+                    String regionText = textRegionField.getText();
+                    String areaText = textAreaField.getText();
+                    if (StringUtil.isEmpty(regionText) || StringUtil.isEmpty(areaText))
+                        return;
+                    String regionCode = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
+                    RegionVo regionVo = new RegionVo();
+                    regionVo.setRegion(regionText);
+                    regionVo.setArea(areaText);
+                    regionVo.setRegionCode(regionCode);
+                    List<RegionVo> regionVos = new ArrayList<>();
+                    regionVos.add(regionVo);
+                    try {
+                        sqliteUtil.insertRegion(regionVos);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
             }
         });
-        addRegion.setBounds(390, 10, 80, 26);
+        addRegion.setBounds(270, 10, 80, 26);
         jPanelGoods.add(addRegion);
 
-        JTextField textItemNameField = new JTextField();
-        textItemNameField.setBounds(10, 40, 60, 26);
-        jPanelGoods.add(textItemNameField);
-        textItemNameField.setColumns(10);
-        textItemNameField.setToolTipText("物品名");
-        textItemNameField.setFont(new java.awt.Font("Dialog", 1, 15));
-
-        JTextField textItemPriceField = new JTextField();
-        textItemPriceField.setBounds(70, 40, 60, 26);
-        jPanelGoods.add(textItemPriceField);
-        textItemPriceField.setColumns(10);
-        textItemPriceField.setToolTipText("物品价格");
-        textItemPriceField.setFont(new java.awt.Font("Dialog", 1, 15));
-
-        JTextField textItemNumField = new JTextField();
-        textItemNumField.setBounds(130, 40, 60, 26);
-        jPanelGoods.add(textItemNumField);
-        textItemNumField.setColumns(10);
-        textItemNumField.setToolTipText("物品数量");
-        textItemNumField.setFont(new java.awt.Font("Dialog", 1, 15));
+        JTextField textItemNameField = new JTextField(8);
+        JTextField textItemPriceField = new JTextField(8);
+        JTextField textItemNumField = new JTextField(8);
+        JPanel addItemPanel = new JPanel();
+        addItemPanel.add(new JLabel("物品名"));
+        addItemPanel.add(textItemNameField);
+        addItemPanel.add(new JLabel("物品价格"));
+        addItemPanel.add(textItemPriceField);
+        addItemPanel.add(new JLabel("物品数量"));
+        addItemPanel.add(textItemNumField);
 
         final JButton addPrice = new JButton("加物");
-        addPrice.setBounds(190, 40, 80, 26);
+        addPrice.setBounds(360, 10, 80, 26);
         jPanelGoods.add(addPrice);
         addPrice.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent arg0) {
-                String itemName = textItemNameField.getText();
-                String itemPrice = textItemPriceField.getText();
-                String itemNum = textItemNumField.getText();
-                if (StringUtil.isEmpty(itemName) || StringUtil.isEmpty(itemPrice) || StringUtil.isEmpty(itemNum))
-                    return;
-                PriceVo priceVo = new PriceVo();
-                priceVo.setItemNum(Integer.parseInt(itemNum));
-                priceVo.setItemPrice(Integer.parseInt(itemPrice));
-                priceVo.setItemName(itemName);
-                priceVo.setRegionCode(regionMap.get(jComboBoxArea.getSelectedItem()));
-                try {
-                    sqliteUtil.insertPrice(priceVo);
-                } catch (Exception e) {
-                    e.printStackTrace();
+                int result = JOptionPane.showConfirmDialog(null, addItemPanel,
+                        "Please Enter X and Y Values", JOptionPane.OK_CANCEL_OPTION);
+                if (result == JOptionPane.OK_OPTION) {
+                    String itemName = textItemNameField.getText();
+                    String itemPrice = textItemPriceField.getText();
+                    String itemNum = textItemNumField.getText();
+                    if (StringUtil.isEmpty(itemName) || StringUtil.isEmpty(itemPrice) || StringUtil.isEmpty(itemNum))
+                        return;
+                    PriceVo priceVo = new PriceVo();
+                    priceVo.setItemNum(Integer.parseInt(itemNum));
+                    priceVo.setItemPrice(Integer.parseInt(itemPrice));
+                    priceVo.setItemName(itemName);
+                    priceVo.setRegionCode(regionMap.get(jComboBoxArea.getSelectedItem()));
+                    try {
+                        sqliteUtil.insertPrice(priceVo);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
             }
         });
@@ -497,7 +490,7 @@ public class Interface {
 
         JTable table = new JTable(dataModel);
         JScrollPane scrollpane = new JScrollPane(table);
-        scrollpane.setBounds(10, 70, 140, 250);
+        scrollpane.setBounds(10, 40, 140, 250);
         jPanelGoods.add(scrollpane);
     }
 

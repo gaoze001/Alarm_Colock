@@ -315,25 +315,13 @@ public class Interface {
         jPanelGoods.setLayout(null);
         jPanelGoods.setBounds(100, 100, 480, 350);
 
-        JLabel jLabelRegion = new JLabel("大区：");
-        jLabelRegion.setBounds(10, 10, 50, 26);
-        jLabelRegion.setFont(new java.awt.Font("Dialog", 1, 15));
-        jLabelRegion.setOpaque(false);
-        jLabelRegion.setBorder(null);
-        jPanelGoods.add(jLabelRegion);
         SqliteUtil sqliteUtil = new SqliteUtil();
         List<String> regionList = sqliteUtil.queryAllRegion();
         JComboBox jComboBoxRegion = new JComboBox(regionList.toArray());
-        jComboBoxRegion.setBounds(60, 10, 80, 26);
+        jComboBoxRegion.setBounds(10, 10, 80, 26);
         jPanelGoods.add(jComboBoxRegion);
-        JLabel jLabelArea = new JLabel("小区：");
-        jLabelArea.setBounds(140, 10, 50, 26);
-        jLabelArea.setFont(new java.awt.Font("Dialog", 1, 15));
-        jLabelArea.setOpaque(false);
-        jLabelArea.setBorder(null);
-        jPanelGoods.add(jLabelArea);
         JComboBox jComboBoxArea = new JComboBox(regionList.toArray());
-        jComboBoxArea.setBounds(190, 10, 80, 26);
+        jComboBoxArea.setBounds(90, 10, 80, 26);
         jPanelGoods.add(jComboBoxArea);
 
         Map<String, String> regionMap = new HashMap<>();
@@ -425,7 +413,7 @@ public class Interface {
         addRegion.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent arg0) {
                 int result = JOptionPane.showConfirmDialog(null, regionPanel,
-                        "Please Enter X and Y Values", JOptionPane.OK_CANCEL_OPTION);
+                        "添加大区", JOptionPane.OK_CANCEL_OPTION);
                 if (result == JOptionPane.OK_OPTION) {
                     String regionText = textRegionField.getText();
                     String areaText = textAreaField.getText();
@@ -446,13 +434,13 @@ public class Interface {
                 }
             }
         });
-        addRegion.setBounds(270, 10, 80, 26);
+        addRegion.setBounds(170, 10, 60, 26);
         jPanelGoods.add(addRegion);
 
-        JTextField textItemNameField = new JTextField(8);
-        JTextField textItemPriceField = new JTextField(8);
-        JTextField textItemNumField = new JTextField(8);
-        JPanel addItemPanel = new JPanel();
+        JComboBox textItemNameField = new JComboBox();
+        JTextField textItemPriceField = new JTextField(6);
+        JTextField textItemNumField = new JTextField(6);
+        JPanel addItemPanel = new JPanel(new GridLayout(0, 2, 3, 3));
         addItemPanel.add(new JLabel("物品名"));
         addItemPanel.add(textItemNameField);
         addItemPanel.add(new JLabel("物品价格"));
@@ -461,32 +449,53 @@ public class Interface {
         addItemPanel.add(textItemNumField);
 
         final JButton addPrice = new JButton("加物");
-        addPrice.setBounds(360, 10, 80, 26);
+        addPrice.setBounds(230, 10, 60, 26);
         jPanelGoods.add(addPrice);
         addPrice.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent arg0) {
-                int result = JOptionPane.showConfirmDialog(null, addItemPanel,
-                        "Please Enter X and Y Values", JOptionPane.OK_CANCEL_OPTION);
-                if (result == JOptionPane.OK_OPTION) {
-                    String itemName = textItemNameField.getText();
-                    String itemPrice = textItemPriceField.getText();
-                    String itemNum = textItemNumField.getText();
-                    if (StringUtil.isEmpty(itemName) || StringUtil.isEmpty(itemPrice) || StringUtil.isEmpty(itemNum))
-                        return;
-                    PriceVo priceVo = new PriceVo();
-                    priceVo.setItemNum(Integer.parseInt(itemNum));
-                    priceVo.setItemPrice(Integer.parseInt(itemPrice));
-                    priceVo.setItemName(itemName);
-                    priceVo.setRegionCode(regionMap.get(jComboBoxArea.getSelectedItem()));
-                    try {
+                try {
+                    List<String> itemList = sqliteUtil.queryAllItem();
+                    itemList.forEach(i->{
+                        textItemNameField.addItem(i);
+                    });
+
+                    int result = JOptionPane.showConfirmDialog(null, addItemPanel,
+                            "添加物品", JOptionPane.OK_CANCEL_OPTION);
+                    if (result == JOptionPane.OK_OPTION) {
+                        String itemName = textItemNameField.getSelectedItem().toString();
+                        String itemPrice = textItemPriceField.getText();
+                        String itemNum = textItemNumField.getText();
+                        if (StringUtil.isEmpty(itemName) || StringUtil.isEmpty(itemPrice) || StringUtil.isEmpty(itemNum))
+                            return;
+                        PriceVo priceVo = new PriceVo();
+                        priceVo.setItemNum(Integer.parseInt(itemNum));
+                        priceVo.setItemPrice(Integer.parseInt(itemPrice));
+                        priceVo.setItemName(itemName);
+                        priceVo.setRegionCode(regionMap.get(jComboBoxArea.getSelectedItem()));
+
                         sqliteUtil.insertPrice(priceVo);
-                    } catch (Exception e) {
-                        e.printStackTrace();
+
                     }
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
             }
         });
-
+        final JButton addItem = new JButton("增物");
+        addItem.setBounds(290, 10, 60, 26);
+        jPanelGoods.add(addItem);
+        addItem.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent arg0) {
+                String input = JOptionPane.showInputDialog("物品名:");
+                if (StringUtil.isEmpty(input))
+                    return;
+                try {
+                    sqliteUtil.insertItemEnum(input);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
 
         JTable table = new JTable(dataModel);
         JScrollPane scrollpane = new JScrollPane(table);

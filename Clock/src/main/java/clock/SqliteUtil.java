@@ -15,6 +15,7 @@ public class SqliteUtil {
         Statement stmt = conn.createStatement();
         stmt.executeUpdate("CREATE TABLE IF NOT EXISTS region(region STRING,area STRING,regioncode STRING)");
         stmt.executeUpdate("CREATE TABLE IF NOT EXISTS price(itemname STRING,itemprice INTEGER,regioncode STRING,itemnum INTEGER)");
+        stmt.executeUpdate("CREATE TABLE IF NOT EXISTS item(itemname STRING)");
         stmt.close();
         conn.close();
     }
@@ -28,6 +29,18 @@ public class SqliteUtil {
                 e.printStackTrace();
             }
         });
+        stmt.close();
+        conn.close();
+    }
+
+    public void insertItemEnum(String item)throws Exception{
+        Connection conn = DriverManager.getConnection("jdbc:sqlite:zking.db");
+        Statement stmt = conn.createStatement();
+        try {
+            stmt.executeUpdate("INSERT INTO item VALUES('"+item+"')");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         stmt.close();
         conn.close();
     }
@@ -53,6 +66,18 @@ public class SqliteUtil {
         stmt.close();
         conn.close();
         return regionList;
+    }
+    public List<String> queryAllItem()throws Exception{
+        Connection conn = DriverManager.getConnection("jdbc:sqlite:zking.db");
+        Statement stmt = conn.createStatement();
+        ResultSet rs = stmt.executeQuery("SELECT itemname FROM item");
+        List<String> itemList = new ArrayList<>();
+        while(rs.next()){
+            itemList.add(rs.getString("itemname"));
+        }
+        stmt.close();
+        conn.close();
+        return itemList;
     }
     public List<RegionVo> queryAreaByRegion(String region)throws Exception{
         Connection conn = DriverManager.getConnection("jdbc:sqlite:zking.db");

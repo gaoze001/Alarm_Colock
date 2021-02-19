@@ -499,7 +499,7 @@ public class Interface {
 
         JTable table = new JTable(dataModel);
         JScrollPane scrollpane = new JScrollPane(table);
-        scrollpane.setBounds(10, 40, 140, 250);
+        scrollpane.setBounds(10, 40, 140, 270);
         jPanelGoods.add(scrollpane);
     }
 

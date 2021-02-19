@@ -272,7 +272,6 @@ public class Interface {
         });
         alarmClock.setBounds(300, 200, 100, 26);
         jPanel.add(alarmClock);
-
         frame.addWindowListener(new WindowAdapter() { // 窗口关闭事件
             public void windowClosing(WindowEvent e) {
                 System.exit(0);
@@ -281,9 +280,7 @@ public class Interface {
             public void windowIconified(WindowEvent e) { // 窗口最小化事件
                 frame.setVisible(false);
                 Interface.miniTray();
-
             }
-
         });
 
     }
@@ -344,7 +341,7 @@ public class Interface {
                 }
             }
         });
-        Vector vect = new Vector();//实例化向量
+        Vector vect = new Vector();
         AbstractTableModel dataModel = new AbstractTableModel() {
             final String[] title = {"物品名", "价格", "数量"};
 
@@ -617,7 +614,11 @@ class Count extends Thread {
                 Interface.setTime();
                 if (Window && Interface.Hour == Time.h && Interface.Minute == Time.m && Time.s == 15) {
                     //System.out.println("闹钟响了");
-                    Interface.AlarmClocks_initialize();
+                    javax.swing.SwingUtilities.invokeLater( new Runnable() {
+                        public void run() {
+                            Interface.AlarmClocks_initialize();
+                        }
+                    });
                 }
                 Thread.sleep(1000);
             } catch (Exception e) {

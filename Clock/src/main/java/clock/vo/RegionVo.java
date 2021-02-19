@@ -5,9 +5,9 @@ import lombok.Data;
 import java.util.List;
 
 @Data
-public class RegionList {
+public class RegionVo {
     private String region;
     private String area;
     private String regionCode;
-    private List<PriceList> priceListList;
+    private List<PriceVo> priceListVo;
 }

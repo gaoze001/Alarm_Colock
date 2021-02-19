@@ -1,18 +1,23 @@
 package clock;
 
+import clock.vo.PriceVo;
+import clock.vo.RegionVo;
+import util.StringUtil;
+
 import java.awt.*;
 import java.awt.event.*;
-import java.io.File;
-import java.io.IOException;
 import java.text.DateFormat;
 
-import javax.sound.sampled.UnsupportedAudioFileException;
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
+import javax.swing.table.AbstractTableModel;
+import javax.swing.table.TableModel;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
+import java.util.List;
+import java.util.stream.Collectors;
 
 
 public class Interface {
@@ -58,7 +63,11 @@ public class Interface {
         jTabbedPane.addTab("闹铃",jPanel);
         jTabbedPane.addTab("物价",goodsPanel);
         frame.setContentPane(jTabbedPane);
-        initRegionPanel(goodsPanel);
+        try {
+            initRegionPanel(goodsPanel);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         frame.setBounds(100, 100, 480, 380);
         frame.setFocusable(true);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -302,17 +311,170 @@ public class Interface {
 
     }
 
-    public static void initRegionPanel(JPanel jPanelGoods){
+    public static void initRegionPanel(JPanel jPanelGoods) throws Exception{
         jPanelGoods.setLayout(null);
         jPanelGoods.setBounds(100, 100, 480, 350);
 
-        JLabel background_p = new JLabel("123");
-        background_p.setLayout(null);
-        background_p.setBounds(0, 0, 480, 350);
-        background_p.setOpaque(false);
-        jPanelGoods.add(background_p);
+        JLabel jLabelRegion = new JLabel("大区：");
+        jLabelRegion.setBounds(10, 10, 50, 26);
+        jLabelRegion.setFont(new java.awt.Font("Dialog", 1, 15));
+        jLabelRegion.setOpaque(false);
+        jLabelRegion.setBorder(null);
+        jPanelGoods.add(jLabelRegion);
+        SqliteUtil sqliteUtil = new SqliteUtil();
+        List<String> regionList =sqliteUtil.queryAllRegion();
+        JComboBox  jComboBoxRegion = new JComboBox (regionList.toArray());
+        jComboBoxRegion.setBounds(60, 10, 80, 26);
+        jPanelGoods.add(jComboBoxRegion);
+        JLabel jLabelArea = new JLabel("小区：");
+        jLabelArea.setBounds(140, 10, 50, 26);
+        jLabelArea.setFont(new java.awt.Font("Dialog", 1, 15));
+        jLabelArea.setOpaque(false);
+        jLabelArea.setBorder(null);
+        jPanelGoods.add(jLabelArea);
+        JComboBox  jComboBoxArea = new JComboBox (regionList.toArray());
+        jComboBoxArea.setBounds(190, 10, 80, 26);
+        jPanelGoods.add(jComboBoxArea);
 
+        Map<String,String> regionMap = new HashMap<>();
+        jComboBoxRegion.addItemListener(new ItemListener() {
+            public void itemStateChanged(ItemEvent e) {
+                if (e.getStateChange() == ItemEvent.SELECTED) {
+                    try {
+                        List<RegionVo> regionAreaList =sqliteUtil.queryAreaByRegion(e.getItem().toString());
+                        regionAreaList.forEach(i->{
+                            regionMap.put(i.getArea(),i.getRegionCode());
+                        });
+                        List<String> areaList = regionAreaList.stream().map(RegionVo::getArea).collect(Collectors.toList());
+                        jComboBoxArea.removeAllItems();
+                        areaList.forEach(x->{
+                            jComboBoxArea.addItem(x);
+                        });
+                    } catch (Exception ex) {
+                        ex.printStackTrace();
+                    }
+                }
+            }
+        });
+
+        jComboBoxArea.addItemListener(new ItemListener() {
+            public void itemStateChanged(ItemEvent e) {
+                if (e.getStateChange() == ItemEvent.SELECTED) {
+                    try {
+                        List<PriceVo> regionList =sqliteUtil.queryPriceByRegion(regionMap.get(e.getItem()));
+                    } catch (Exception ex) {
+                        ex.printStackTrace();
+                    }
+                }
+            }
+        });
+
+        JTextField textRegionField = new JTextField();
+        textRegionField.setBounds(270, 10, 60, 26);
+        jPanelGoods.add(textRegionField);
+        textRegionField.setColumns(10);
+        textRegionField.setToolTipText("大区");
+        textRegionField.setFont(new java.awt.Font("Dialog", 1, 15));
+
+        JTextField textAreaField = new JTextField();
+        textAreaField.setBounds(330, 10, 60, 26);
+        jPanelGoods.add(textAreaField);
+        textAreaField.setColumns(10);
+        textAreaField.setToolTipText("小区");
+        textAreaField.setFont(new java.awt.Font("Dialog", 1, 15));
+
+        final JButton addRegion= new JButton("加区");
+        addRegion.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent arg0) {
+                String regionText = textRegionField.getText();
+                String areaText = textAreaField.getText();
+                if(StringUtil.isEmpty(regionText)||StringUtil.isEmpty(areaText))
+                    return;
+                String regionCode = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
+                RegionVo regionVo = new RegionVo();
+                regionVo.setRegion(regionText);
+                regionVo.setArea(areaText);
+                regionVo.setRegionCode(regionCode);
+                List<RegionVo> regionVos = new ArrayList<>();
+                regionVos.add(regionVo);
+                try {
+                    sqliteUtil.insertRegion(regionVos);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+        addRegion.setBounds(390, 10, 80, 26);
+        jPanelGoods.add(addRegion);
+        final String[] title = { "物品名", "价格", "数量"};
+        StudentTableModel dataModel = new StudentTableModel();
+        JTable table= new JTable(dataModel);
+        JScrollPane scrollpane = new JScrollPane(table);
+        scrollpane.setBounds(10,50,440,320);
+        jPanelGoods.add(scrollpane);
     }
+
+    static class StudentTableModel extends AbstractTableModel {
+        List<PriceVo> priceList = new ArrayList();
+        public void setPrice(final List<PriceVo> list){
+            //invokeLater()方法:导致 doRun.run() 在 AWT 事件指派线程上异步执行。在所有挂起的 AWT 事件被处理后才发生。
+            //此方法应该在应用程序线程需要更新该 GUI 时使用
+            SwingUtilities.invokeLater(new Runnable(){
+
+                public void run() {
+                    priceList = list;
+                    fireTableDataChanged();  //通知JTable数据对象已更改,重绘界面
+                }
+
+            });
+
+        }
+        public int getColumnCount() {
+            return 3;
+        }
+        public int getRowCount() {
+            return priceList.size();
+        }
+        public Object getValueAt(int rowIndex, int columnIndex) {
+            PriceVo priceVo = priceList.get(rowIndex);
+            switch (columnIndex) {
+                case 0:
+                    return priceVo.getItemName();
+                case 1:
+                    return priceVo.getItemPrice();
+                case 2:
+                    return priceVo.getItemNum();
+                default:
+                    break;
+            }
+            return null;
+        }
+    }
+
+//    public static AbstractTableModel getTableModel(String regionCode) {
+//
+//        try {
+//            return new AbstractTableModel() {
+//                SqliteUtil sqliteUtil = new SqliteUtil();
+//                List<PriceVo> regionList =sqliteUtil.queryPriceByRegion(regionCode);
+//                public int getColumnCount() {
+//                    return 3;
+//                }
+//
+//                @Override
+//                public Object getValueAt(int rowIndex, int columnIndex) {
+//                    return null;
+//                }
+//
+//                public int getRowCount() {
+//                    return regionList.size();
+//                }
+//            };
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//    }
+
     public static void setTime() {
         String s = "";
         s = " " + Integer.toString(Time.getHour()) + "  :  "

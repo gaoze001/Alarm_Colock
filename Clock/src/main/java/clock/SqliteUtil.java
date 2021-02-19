@@ -1,7 +1,7 @@
 package clock;
 
-import clock.vo.PriceList;
-import clock.vo.RegionList;
+import clock.vo.PriceVo;
+import clock.vo.RegionVo;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -14,15 +14,14 @@ public class SqliteUtil {
         Connection conn = DriverManager.getConnection("jdbc:sqlite:zking.db");
         Statement stmt = conn.createStatement();
         stmt.executeUpdate("CREATE TABLE IF NOT EXISTS region(region STRING,area STRING,regioncode STRING)");
-        stmt.executeUpdate("CREATE TABLE IF NOT EXISTS price(itemname STRING,itemprice INTEGER,regioncode STRING)");
+        stmt.executeUpdate("CREATE TABLE IF NOT EXISTS price(itemname STRING,itemprice INTEGER,regioncode STRING,itemnum INTEGER)");
         stmt.close();
         conn.close();
     }
-    public void insertRegion(List<RegionList> regionLists)throws Exception{
-        Class.forName("org.sqlite.JDBC");
+    public void insertRegion(List<RegionVo> regionVos)throws Exception{
         Connection conn = DriverManager.getConnection("jdbc:sqlite:zking.db");
         Statement stmt = conn.createStatement();
-        regionLists.forEach(i->{
+        regionVos.forEach(i->{
             try {
                 stmt.executeUpdate("INSERT INTO region VALUES('"+i.getRegion()+"', '"+i.getArea()+"','"+i.getRegionCode()+"')");
             } catch (SQLException e) {
@@ -32,13 +31,12 @@ public class SqliteUtil {
         stmt.close();
         conn.close();
     }
-    public void insertPrice(List<PriceList> PriceList)throws Exception{
-        Class.forName("org.sqlite.JDBC");
+    public void insertPrice(List<PriceVo> PriceVo)throws Exception{
         Connection conn = DriverManager.getConnection("jdbc:sqlite:zking.db");
         Statement stmt = conn.createStatement();
-        PriceList.forEach(i->{
+        PriceVo.forEach(i->{
             try {
-                stmt.executeUpdate("INSERT INTO price VALUES('"+i.getItemName()+"', '"+i.getItemPrice()+"','"+i.getRegionCode()+"')");
+                stmt.executeUpdate("INSERT INTO price VALUES('"+i.getItemName()+"', '"+i.getItemPrice()+"','"+i.getRegionCode()+"','"+i.getItemNum()+"')");
             } catch (SQLException e) {
                 e.printStackTrace();
             }
@@ -47,7 +45,6 @@ public class SqliteUtil {
         conn.close();
     }
     public List<String> queryAllRegion()throws Exception{
-        Class.forName("org.sqlite.JDBC");
         Connection conn = DriverManager.getConnection("jdbc:sqlite:zking.db");
         Statement stmt = conn.createStatement();
         ResultSet rs = stmt.executeQuery("SELECT distinct(region) region FROM region");
@@ -59,14 +56,13 @@ public class SqliteUtil {
         conn.close();
         return regionList;
     }
-    public List<RegionList> queryAreaByRegion(String region)throws Exception{
-        Class.forName("org.sqlite.JDBC");
+    public List<RegionVo> queryAreaByRegion(String region)throws Exception{
         Connection conn = DriverManager.getConnection("jdbc:sqlite:zking.db");
         Statement stmt = conn.createStatement();
         ResultSet rs = stmt.executeQuery("SELECT region,area,regioncode FROM region where region='"+region+"'");
-        List<RegionList> regionList = new ArrayList<>();
+        List<RegionVo> regionList = new ArrayList<>();
         while(rs.next()){
-            RegionList regionVo = new RegionList();
+            RegionVo regionVo = new RegionVo();
             regionVo.setRegion(rs.getString("region"));
             regionVo.setArea(rs.getString("area"));
             regionVo.setRegionCode(rs.getString("regioncode"));
@@ -77,17 +73,17 @@ public class SqliteUtil {
         return regionList;
     }
 
-    public List<PriceList> queryPriceByRegion(String regionCode)throws Exception{
-        Class.forName("org.sqlite.JDBC");
+    public List<PriceVo> queryPriceByRegion(String regionCode)throws Exception{
         Connection conn = DriverManager.getConnection("jdbc:sqlite:zking.db");
         Statement stmt = conn.createStatement();
-        ResultSet rs = stmt.executeQuery("SELECT itemname,itemprice,regioncode FROM price where regioncode='"+regionCode+"'");
-        List<PriceList> regionList = new ArrayList<>();
+        ResultSet rs = stmt.executeQuery("SELECT itemname,itemprice,regioncode,itemnum FROM price where regioncode='"+regionCode+"' ORDER BY itemname");
+        List<PriceVo> regionList = new ArrayList<>();
         while(rs.next()){
-            PriceList regionVo = new PriceList();
+            PriceVo regionVo = new PriceVo();
             regionVo.setItemName(rs.getString("itemname"));
             regionVo.setItemPrice(rs.getInt("itemprice"));
             regionVo.setRegionCode(rs.getString("regioncode"));
+            regionVo.setItemNum(rs.getInt("itemnum"));
             regionList.add(regionVo);
         }
         stmt.close();

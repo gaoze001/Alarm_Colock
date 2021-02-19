@@ -15,14 +15,14 @@ public class PlayUtil {
     SourceDataLine data = null;
 
     /**
-     * Java Music æ’­æ”¾ flac
+     * Java Music ²¥·Å flac
      *
-     * @param path flacæ–‡ä»¶è·¯å¾„
+     * @param path flacÎÄ¼şÂ·¾¶
      * @throws IOException
      * @throws UnsupportedAudioFileException
      * @Title: play_flac
-     * @Description: æ’­æ”¾ flac
-     * @date 2019å¹´10æœˆ25æ—¥ ä¸‹åˆ12:28:41
+     * @Description: ²¥·Å flac
+     * @date 2019Äê10ÔÂ25ÈÕ ÏÂÎç12:28:41
      */
     public void playFlac(String path) throws UnsupportedAudioFileException, IOException {
         file = new File(path);
@@ -55,19 +55,19 @@ public class PlayUtil {
     }
 
     /**
-     * Java Music æ’­æ”¾ wav
+     * Java Music ²¥·Å wav
      *
-     * @param path wav æ–‡ä»¶è·¯å¾„
+     * @param path wav ÎÄ¼şÂ·¾¶
      * @throws IOException
      * @throws UnsupportedAudioFileException
      * @Title: play_wav
-     * @Description: æ’­æ”¾ wav
-     * @date 2019å¹´10æœˆ25æ—¥ ä¸‹åˆ12:28:41
+     * @Description: ²¥·Å wav
+     * @date 2019Äê10ÔÂ25ÈÕ ÏÂÎç12:28:41
      */
     public void playWav(String path) throws UnsupportedAudioFileException, IOException {
         file = new File(path);
         if (!file.exists() || !path.toLowerCase().endsWith(".wav")) {
-            throw new RuntimeException("æ–‡ä»¶ä¸å­˜åœ¨");
+            throw new RuntimeException("ÎÄ¼ş²»´æÔÚ");
         }
         audio = AudioSystem.getAudioInputStream(file);
         AudioFormat target = audio.getFormat();
@@ -92,19 +92,19 @@ public class PlayUtil {
     }
 
     /**
-     * Java Music æ’­æ”¾ pcm
+     * Java Music ²¥·Å pcm
      *
-     * @param path pcmæ–‡ä»¶è·¯å¾„
+     * @param path pcmÎÄ¼şÂ·¾¶
      * @throws IOException
      * @throws UnsupportedAudioFileException
      * @Title: play_pcm
-     * @Description: æ’­æ”¾ pcm
-     * @date 2019å¹´10æœˆ25æ—¥ ä¸‹åˆ12:28:41
+     * @Description: ²¥·Å pcm
+     * @date 2019Äê10ÔÂ25ÈÕ ÏÂÎç12:28:41
      */
     public void playPcm(String path) throws UnsupportedAudioFileException, IOException {
         file = new File(path);
         if (!file.exists() || !path.toLowerCase().endsWith(".pcm")) {
-            throw new RuntimeException("æ–‡ä»¶ä¸å­˜åœ¨");
+            throw new RuntimeException("ÎÄ¼ş²»´æÔÚ");
         }
         stream = AudioSystem.getAudioInputStream(file);
         AudioFormat target = stream.getFormat();
@@ -129,28 +129,28 @@ public class PlayUtil {
     }
 
     /**
-     * Java Music æ’­æ”¾ mp3
+     * Java Music ²¥·Å mp3
      *
-     * @param path mp3æ–‡ä»¶è·¯å¾„
+     * @param path mp3ÎÄ¼şÂ·¾¶
      * @throws IOException
      * @throws UnsupportedAudioFileException
      * @Title: play_mp3
-     * @Description: æ’­æ”¾ mp3
-     * @date 2019å¹´10æœˆ25æ—¥ ä¸‹åˆ12:28:41
+     * @Description: ²¥·Å mp3
+     * @date 2019Äê10ÔÂ25ÈÕ ÏÂÎç12:28:41
      */
     public void playMp3(String path) throws UnsupportedAudioFileException, IOException {
         file = new File(path);
         if (!file.exists() || !path.toLowerCase().endsWith(".mp3")) {
-            throw new RuntimeException("æ–‡ä»¶ä¸å­˜åœ¨");
+            throw new RuntimeException("ÎÄ¼ş²»´æÔÚ");
         }
         stream = null;
-        //ä½¿ç”¨ mp3spi è§£ç  mp3 éŸ³é¢‘æ–‡ä»¶
+        //Ê¹ÓÃ mp3spi ½âÂë mp3 ÒôÆµÎÄ¼ş
         MpegAudioFileReader mp = new MpegAudioFileReader();
         stream = mp.getAudioInputStream(file);
         AudioFormat baseFormat = stream.getFormat();
-        //è®¾å®šè¾“å‡ºæ ¼å¼ä¸ºpcmæ ¼å¼çš„éŸ³é¢‘æ–‡ä»¶
+        //Éè¶¨Êä³ö¸ñÊ½Îªpcm¸ñÊ½µÄÒôÆµÎÄ¼ş
         AudioFormat format = new AudioFormat(AudioFormat.Encoding.PCM_SIGNED, baseFormat.getSampleRate(), 16, baseFormat.getChannels(), baseFormat.getChannels() * 2, baseFormat.getSampleRate(), false);
-        // è¾“å‡ºåˆ°éŸ³é¢‘
+        // Êä³öµ½ÒôÆµ
         stream = AudioSystem.getAudioInputStream(format, stream);
         AudioFormat target = stream.getFormat();
         DataLine.Info dinfo = new DataLine.Info(SourceDataLine.class, target, AudioSystem.NOT_SPECIFIED);
@@ -176,13 +176,13 @@ public class PlayUtil {
     }
 
     /**
-     * Java Music è¯»å–pcmæ–‡ä»¶
+     * Java Music ¶ÁÈ¡pcmÎÄ¼ş
      *
-     * @param path pcmæ–‡ä»¶è·¯å¾„
+     * @param path pcmÎÄ¼şÂ·¾¶
      * @return AudioInputStream
      * @Title: read_pcm
-     * @Description: è¯»å–pcmæ–‡ä»¶
-     * @date 2019å¹´10æœˆ25æ—¥ ä¸‹åˆ12:28:41
+     * @Description: ¶ÁÈ¡pcmÎÄ¼ş
+     * @date 2019Äê10ÔÂ25ÈÕ ÏÂÎç12:28:41
      */
     public AudioInputStream readPcm(String path) throws UnsupportedAudioFileException, IOException {
         file = new File(path);
@@ -196,14 +196,14 @@ public class PlayUtil {
     }
 
     /**
-     * Java Music è·å– mp3 è„‰å†²ç¼–ç è°ƒåˆ¶
+     * Java Music »ñÈ¡ mp3 Âö³å±àÂëµ÷ÖÆ
      *
-     * @param rpath mp3æ–‡ä»¶è·¯å¾„
-     * @param spath pcmæ–‡ä»¶ä¿å­˜è·¯å¾„
+     * @param rpath mp3ÎÄ¼şÂ·¾¶
+     * @param spath pcmÎÄ¼ş±£´æÂ·¾¶
      * @return AudioInputStream
      * @Title: get_pcm_from_mp3
-     * @Description: è·å– mp3 è„‰å†²ç¼–ç è°ƒåˆ¶
-     * @date 2019å¹´10æœˆ25æ—¥ ä¸‹åˆ12:28:41
+     * @Description: »ñÈ¡ mp3 Âö³å±àÂëµ÷ÖÆ
+     * @date 2019Äê10ÔÂ25ÈÕ ÏÂÎç12:28:41
      */
     public void getPcmFromMp3(String rpath, String spath) {
         file = new File(rpath);
@@ -214,13 +214,13 @@ public class PlayUtil {
         AudioFormat format = null;
         try {
             AudioInputStream in = null;
-            //è¯»å–éŸ³é¢‘æ–‡ä»¶çš„ç±»
+            //¶ÁÈ¡ÒôÆµÎÄ¼şµÄÀà
             MpegAudioFileReader mp = new MpegAudioFileReader();
             in = mp.getAudioInputStream(file);
             AudioFormat baseFormat = in.getFormat();
-            //è®¾å®šè¾“å‡ºæ ¼å¼ä¸ºpcmæ ¼å¼çš„éŸ³é¢‘æ–‡ä»¶
+            //Éè¶¨Êä³ö¸ñÊ½Îªpcm¸ñÊ½µÄÒôÆµÎÄ¼ş
             format = new AudioFormat(AudioFormat.Encoding.PCM_SIGNED, baseFormat.getSampleRate(), 16, baseFormat.getChannels(), baseFormat.getChannels() * 2, baseFormat.getSampleRate(), false);
-            //è¾“å‡ºåˆ°éŸ³é¢‘
+            //Êä³öµ½ÒôÆµ
             stream = AudioSystem.getAudioInputStream(format, in);
             AudioSystem.write(stream, AudioFileFormat.Type.WAVE, new File(spath));
             stream.close();
@@ -230,14 +230,14 @@ public class PlayUtil {
     }
 
     /**
-     * Java Music mp3 è½¬ pcm
+     * Java Music mp3 ×ª pcm
      *
-     * @param rpath MP3æ–‡ä»¶è·¯å¾„
-     * @param spath PCMæ–‡ä»¶ä¿å­˜è·¯å¾„
+     * @param rpath MP3ÎÄ¼şÂ·¾¶
+     * @param spath PCMÎÄ¼ş±£´æÂ·¾¶
      * @return AudioInputStream
      * @Title: mp3_to_pcm
      * @Description: MP3 PCM
-     * @date 2019å¹´10æœˆ25æ—¥ ä¸‹åˆ12:28:41
+     * @date 2019Äê10ÔÂ25ÈÕ ÏÂÎç12:28:41
      */
     public void mp3ToPcm(String rpath, String spath) {
         file = new File(rpath);
@@ -248,13 +248,13 @@ public class PlayUtil {
         AudioFormat format = null;
         try {
             AudioInputStream in = null;
-            //è¯»å–éŸ³é¢‘æ–‡ä»¶çš„ç±»
+            //¶ÁÈ¡ÒôÆµÎÄ¼şµÄÀà
             MpegAudioFileReader mp = new MpegAudioFileReader();
             in = mp.getAudioInputStream(file);
             AudioFormat baseFormat = in.getFormat();
-            //è®¾å®šè¾“å‡ºæ ¼å¼ä¸ºpcmæ ¼å¼çš„éŸ³é¢‘æ–‡ä»¶
+            //Éè¶¨Êä³ö¸ñÊ½Îªpcm¸ñÊ½µÄÒôÆµÎÄ¼ş
             format = new AudioFormat(AudioFormat.Encoding.PCM_SIGNED, baseFormat.getSampleRate(), 16, baseFormat.getChannels(), baseFormat.getChannels() * 2, baseFormat.getSampleRate(), false);
-            //è¾“å‡ºåˆ°éŸ³é¢‘
+            //Êä³öµ½ÒôÆµ
             stream = AudioSystem.getAudioInputStream(format, in);
             AudioSystem.write(stream, AudioFileFormat.Type.WAVE, new File(spath));
             stream.close();
@@ -264,26 +264,26 @@ public class PlayUtil {
     }
 
     /**
-     * Java Music wavè½¬pcm
+     * Java Music wav×ªpcm
      *
-     * @param wpath wavæ–‡ä»¶è·¯å¾„
-     * @param ppath pcmæ–‡ä»¶ä¿å­˜è·¯å¾„
+     * @param wpath wavÎÄ¼şÂ·¾¶
+     * @param ppath pcmÎÄ¼ş±£´æÂ·¾¶
      * @return AudioInputStream
      * @throws IOException
      * @throws UnsupportedAudioFileException
      * @Title: wav_to_pcm
-     * @Description: wavè½¬pcm
-     * @date 2019å¹´10æœˆ25æ—¥ ä¸‹åˆ12:28:41
+     * @Description: wav×ªpcm
+     * @date 2019Äê10ÔÂ25ÈÕ ÏÂÎç12:28:41
      */
     public void wavToPcm(String wpath, String ppath) {
         file = new File(wpath);
         if (!file.exists()) {
-            throw new RuntimeException("æ–‡ä»¶ä¸å­˜åœ¨");
+            throw new RuntimeException("ÎÄ¼ş²»´æÔÚ");
         }
         AudioInputStream stream1;
         try {
             stream1 = AudioSystem.getAudioInputStream(file);
-            // æ ¹æ®å®é™…æƒ…å†µä¿®æ”¹ AudioFormat.Encoding.PCM_SIGNED
+            // ¸ù¾İÊµ¼ÊÇé¿öĞŞ¸Ä AudioFormat.Encoding.PCM_SIGNED
             AudioInputStream stream2 = AudioSystem.getAudioInputStream(AudioFormat.Encoding.PCM_SIGNED, stream1);
             AudioSystem.write(stream2, AudioFileFormat.Type.WAVE, new File(ppath));
             stream2.close();
@@ -294,29 +294,29 @@ public class PlayUtil {
     }
 
     /**
-     * Java Music PCMè½¬WAV
+     * Java Music PCM×ªWAV
      *
-     * @param wpath WAVæ–‡ä»¶è·¯å¾„
-     * @param ppath PCMæ–‡ä»¶ä¿å­˜è·¯å¾„
+     * @param wpath WAVÎÄ¼şÂ·¾¶
+     * @param ppath PCMÎÄ¼ş±£´æÂ·¾¶
      * @return AudioInputStream
      * @throws IOException
      * @throws UnsupportedAudioFileException
      * @Title: pcm_to_wav
-     * @Description: PCMè½¬WAV
-     * @date 2019å¹´10æœˆ25æ—¥ ä¸‹åˆ12:28:41
+     * @Description: PCM×ªWAV
+     * @date 2019Äê10ÔÂ25ÈÕ ÏÂÎç12:28:41
      */
     public void pcmToWav(String ppath, String wpath) {
 
     }
 
     /**
-     * Java Music è·å–wavæˆ–è€…pcmæ–‡ä»¶çš„ç¼–ç ä¿¡æ¯
+     * Java Music »ñÈ¡wav»òÕßpcmÎÄ¼şµÄ±àÂëĞÅÏ¢
      *
-     * @param path wavæˆ–è€…pcmæ–‡ä»¶è·¯å¾„
-     * @return wavæˆ–è€…pcmæ–‡ä»¶çš„ç¼–ç ä¿¡æ¯
+     * @param path wav»òÕßpcmÎÄ¼şÂ·¾¶
+     * @return wav»òÕßpcmÎÄ¼şµÄ±àÂëĞÅÏ¢
      * @Title: get_info
-     * @Description: è·å–wavæˆ–è€…pcmæ–‡ä»¶çš„ç¼–ç ä¿¡æ¯
-     * @date 2019å¹´10æœˆ25æ—¥ ä¸‹åˆ12:28:41
+     * @Description: »ñÈ¡wav»òÕßpcmÎÄ¼şµÄ±àÂëĞÅÏ¢
+     * @date 2019Äê10ÔÂ25ÈÕ ÏÂÎç12:28:41
      */
     public String getInfo(String path) {
         File file = new File(path);
@@ -327,11 +327,11 @@ public class PlayUtil {
             AudioFormat af = ais.getFormat();
             result = af.toString();
             System.out.println(result);
-            System.out.println("éŸ³é¢‘æ€»å¸§æ•°ï¼š" + ais.getFrameLength());
-            System.out.println("æ¯ç§’æ’­æ”¾å¸§æ•°ï¼š" + af.getSampleRate());
+            System.out.println("ÒôÆµ×ÜÖ¡Êı£º" + ais.getFrameLength());
+            System.out.println("Ã¿Ãë²¥·ÅÖ¡Êı£º" + af.getSampleRate());
             float len = ais.getFrameLength() / af.getSampleRate();
-            System.out.println("éŸ³é¢‘æ—¶é•¿ï¼ˆç§’ï¼‰ï¼š" + len);
-            System.out.println("éŸ³é¢‘æ—¶é•¿ï¼š" + (int) len / 60 + "åˆ†" + len % 60 + "ç§’");
+            System.out.println("ÒôÆµÊ±³¤£¨Ãë£©£º" + len);
+            System.out.println("ÒôÆµÊ±³¤£º" + (int) len / 60 + "·Ö" + len % 60 + "Ãë");
         } catch (UnsupportedAudioFileException e) {
             throw new RuntimeException(e.getMessage());
         } catch (IOException e) {
@@ -381,11 +381,11 @@ public class PlayUtil {
         }
     }
 //    /**
-//     * Java Music è·å–mp3æ–‡ä»¶çš„å›¾ç‰‡
+//     * Java Music »ñÈ¡mp3ÎÄ¼şµÄÍ¼Æ¬
 //     * @Title: get_image_from_mp3
-//     * @Description: è·å–mp3æ–‡ä»¶çš„å›¾ç‰‡
-//     * @param mpath mp3flacæ–‡ä»¶è·¯å¾„
-//     * @date 2019å¹´10æœˆ25æ—¥ ä¸‹åˆ12:28:41
+//     * @Description: »ñÈ¡mp3ÎÄ¼şµÄÍ¼Æ¬
+//     * @param mpath mp3flacÎÄ¼şÂ·¾¶
+//     * @date 2019Äê10ÔÂ25ÈÕ ÏÂÎç12:28:41
 //     *
 //     */
 //    public void get_image_from_mp3(String mpath) throws IOException, TagException, ReadOnlyFileException, InvalidAudioFrameException {
@@ -397,7 +397,7 @@ public class PlayUtil {
 //        byte[] image = body.getImageData();
 //        Image img=Toolkit.getDefaultToolkit().createImage(image, 0,image.length);
 //        ImageIcon icon = new ImageIcon(img);
-//        FileOutputStream fos = new FileOutputStream("C:\\Users\\Administrator\\Desktop\\æ¢¦æ¶µ - åŠ å‡ä¹˜é™¤.jpg");
+//        FileOutputStream fos = new FileOutputStream("C:\\Users\\Administrator\\Desktop\\ÃÎº­ - ¼Ó¼õ³Ë³ı.jpg");
 //        fos.write(image);
 //        fos.close();
 //        System.out.println("width:"+icon.getIconWidth());

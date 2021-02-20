@@ -6,6 +6,7 @@ import javax.sound.sampled.*;
 import javax.swing.*;
 import java.io.File;
 import java.io.IOException;
+import java.net.URL;
 
 public class PlayUtil {
     File file = null;
@@ -131,22 +132,22 @@ public class PlayUtil {
     /**
      * Java Music 播放 mp3
      *
-     * @param path mp3文件路径
+     * @param url mp3文件路径
      * @throws IOException
      * @throws UnsupportedAudioFileException
      * @Title: play_mp3
      * @Description: 播放 mp3
      * @date 2019年10月25日 下午12:28:41
      */
-    public void playMp3(String path) throws UnsupportedAudioFileException, IOException {
-        file = new File(path);
-        if (!file.exists() || !path.toLowerCase().endsWith(".mp3")) {
-            throw new RuntimeException("文件不存在");
-        }
+    public void playMp3(URL url) throws UnsupportedAudioFileException, IOException {
+//        file = new File(path);
+//        if (!file.exists() || !path.toLowerCase().endsWith(".mp3")) {
+//            throw new RuntimeException("文件不存在");
+//        }
         stream = null;
         //使用 mp3spi 解码 mp3 音频文件
         MpegAudioFileReader mp = new MpegAudioFileReader();
-        stream = mp.getAudioInputStream(file);
+        stream = mp.getAudioInputStream(url);
         AudioFormat baseFormat = stream.getFormat();
         //设定输出格式为pcm格式的音频文件
         AudioFormat format = new AudioFormat(AudioFormat.Encoding.PCM_SIGNED, baseFormat.getSampleRate(), 16, baseFormat.getChannels(), baseFormat.getChannels() * 2, baseFormat.getSampleRate(), false);

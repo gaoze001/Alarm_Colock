@@ -534,17 +534,7 @@ public class Interface {
         tip.setText("ƒ÷÷”œÏ¡À£°");
         tip.setFont(new java.awt.Font("Dialog", 1, 10));
         jframe.getContentPane().add(tip);
-        cachedThreadPool.execute(new Runnable() {
-            public void run() {
-                try {
-                    playUtil.playMp3(ClassLoader.getSystemResource("mp.mp3").getPath());
-                } catch (UnsupportedAudioFileException e) {
-                    e.printStackTrace();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        });
+
         final JButton button_MoreSleep = new JButton("πÿ±’");
         button_MoreSleep.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -565,6 +555,17 @@ public class Interface {
                 Integer integer = Integer.parseInt(alarmClock_hour.getText().trim()) + 1;
                 alarmClock_hour.setText(integer.toString());
             }
+            cachedThreadPool.execute(new Runnable() {
+                public void run() {
+                    try {
+                        playUtil.playMp3(ClassLoader.getSystemResource("mp.mp3"));
+                    } catch (UnsupportedAudioFileException e) {
+                        e.printStackTrace();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
         } catch (Exception e) {
             e.printStackTrace();
         }

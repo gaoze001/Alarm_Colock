@@ -291,13 +291,13 @@ public class Interface {
 
     private static void miniTray() { // 窗口最小化到任务栏托盘
 
-        String xmlfilePath = new Object() {
-            public String getPath() {
-                return this.getClass().getResource("/background.png").getPath();
-            }
-        }.getPath().substring(1);
+//        String xmlfilePath = new Object() {
+//            public String getPath() {
+//                return this.getClass().getResource("/background.png").getPath();
+//            }
+//        }.getPath().substring(1);
 
-        ImageIcon trayImg = new ImageIcon(xmlfilePath);// 托盘图标
+        ImageIcon trayImg = new ImageIcon(ClassLoader.getSystemResource("background.png"));// 托盘图标
         trayIcon = new TrayIcon(trayImg.getImage(), "工具箱", new PopupMenu());
         trayIcon.setImageAutoSize(true);
         trayIcon.addMouseListener(new MouseAdapter() {
@@ -534,15 +534,10 @@ public class Interface {
         tip.setText("闹钟响了！");
         tip.setFont(new java.awt.Font("Dialog", 1, 10));
         jframe.getContentPane().add(tip);
-        String xmlfilePath = new Object() {
-            public String getPath() {
-                return this.getClass().getResource("/mp.mp3").getPath();
-            }
-        }.getPath().substring(1);
         cachedThreadPool.execute(new Runnable() {
             public void run() {
                 try {
-                    playUtil.playMp3(xmlfilePath);
+                    playUtil.playMp3(ClassLoader.getSystemResource("mp.mp3").getPath());
                 } catch (UnsupportedAudioFileException e) {
                     e.printStackTrace();
                 } catch (IOException e) {

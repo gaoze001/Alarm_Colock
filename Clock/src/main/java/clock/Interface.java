@@ -2,12 +2,15 @@ package clock;
 
 import clock.vo.PriceVo;
 import clock.vo.RegionVo;
+import sun.security.util.Resources;
 import util.StringUtil;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.io.IOException;
 import java.text.DateFormat;
 
+import javax.sound.sampled.UnsupportedAudioFileException;
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.table.AbstractTableModel;
@@ -17,6 +20,8 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
 
 
@@ -41,10 +46,10 @@ public class Interface {
     Date now = new Date();
     DateFormat dateFromat = DateFormat.getDateTimeInstance();
 
-    public Count count = new Count();
-
     private static PlayUtil playUtil = new PlayUtil();
     private static java.util.List<String> minuteArr = Arrays.asList("9", "19", "29", "39", "49", "59");
+
+    private static ExecutorService cachedThreadPool = Executors.newCachedThreadPool();
 
     //初始化；
     @SuppressWarnings("deprecation")
@@ -257,7 +262,6 @@ public class Interface {
                         String str_minute = alarmClock_minute.getText();
                         Minute = Integer.parseInt(str_minute);
                         alarmClock.setText("关闭闹钟");
-                        count.Window = true;
                         alarmClockTextTip.setText("闹钟已开启！");
                     } else {
                         alarmClockTextTip.setText("输入有误，请重新输入！");
@@ -287,8 +291,14 @@ public class Interface {
 
     private static void miniTray() { // 窗口最小化到任务栏托盘
 
-        ImageIcon trayImg = new ImageIcon("D:\\background.png");// 托盘图标
-        trayIcon = new TrayIcon(trayImg.getImage(), "闹铃", new PopupMenu());
+        String xmlfilePath = new Object() {
+            public String getPath() {
+                return this.getClass().getResource("/background.png").getPath();
+            }
+        }.getPath().substring(1);
+
+        ImageIcon trayImg = new ImageIcon(xmlfilePath);// 托盘图标
+        trayIcon = new TrayIcon(trayImg.getImage(), "工具箱", new PopupMenu());
         trayIcon.setImageAutoSize(true);
         trayIcon.addMouseListener(new MouseAdapter() {
             public void mouseClicked(MouseEvent e) {
@@ -452,7 +462,7 @@ public class Interface {
             public void actionPerformed(ActionEvent arg0) {
                 try {
                     List<String> itemList = sqliteUtil.queryAllItem();
-                    itemList.forEach(i->{
+                    itemList.forEach(i -> {
                         textItemNameField.addItem(i);
                     });
 
@@ -511,8 +521,6 @@ public class Interface {
     }
 
     public static void AlarmClocks_initialize() {
-
-
         jframe = new JFrame();
         jframe.setBounds(80, 80, 400, 360);
         jframe.setFocusable(true);
@@ -526,11 +534,26 @@ public class Interface {
         tip.setText("闹钟响了！");
         tip.setFont(new java.awt.Font("Dialog", 1, 10));
         jframe.getContentPane().add(tip);
-
+        String xmlfilePath = new Object() {
+            public String getPath() {
+                return this.getClass().getResource("/mp.mp3").getPath();
+            }
+        }.getPath().substring(1);
+        cachedThreadPool.execute(new Runnable() {
+            public void run() {
+                try {
+                    playUtil.playMp3(xmlfilePath);
+                } catch (UnsupportedAudioFileException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
         final JButton button_MoreSleep = new JButton("关闭");
         button_MoreSleep.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                jframe.setVisible(false);
+                jframe.dispose();
                 playUtil.closeAll();
             }
         });
@@ -547,87 +570,41 @@ public class Interface {
                 Integer integer = Integer.parseInt(alarmClock_hour.getText().trim()) + 1;
                 alarmClock_hour.setText(integer.toString());
             }
-            playUtil.playMp3("D:\\mp.mp3");
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    public void upDate() {
-        now = new Date();
-        String s = dateFromat.format(now);
-        date.setText(s);
-    }
-}
-
-
-//计时器；
-
-class Count extends Thread {
-
-    private final Object lock = new Object();
-
-    public Boolean Window = false;
-
-    private boolean pause = false;
-
-    /**
-     * 调用该方法实现线程的暂停
-     */
-    void pauseThread() {
-        pause = true;
-    }
-
-
-    /**
-     * 调用该方法实现恢复线程的运行
-     */
-    void resumeThread() {
-        pause = false;
-        synchronized (lock) {
-            lock.notify();
-        }
-    }
-
-    /**
-     * 这个方法只能在run 方法中实现，不然会阻塞主线程，导致页面无响应
-     */
-    void onPause() {
-        synchronized (lock) {
-            try {
-                lock.wait();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
+    //计时器；
+    public static void runCount() {
+        cachedThreadPool.execute(new Runnable() {
+            public void run() {
+                Interface.countThread();
             }
-        }
+        });
     }
 
-    @Override
-    public void run() {
-        super.run();
-        while (true) {
-            while (pause) {
-                onPause();
+    public static void countThread() {
+        try {
+            Time.run();
+            Interface.setTime();
+            if (Interface.Hour == Time.h && Interface.Minute == Time.m && Time.s == 15) {
+                //System.out.println("闹钟响了");
+                cachedThreadPool.execute(new Runnable() {
+                    public void run() {
+                        Interface.AlarmClocks_initialize();
+                    }
+                });
             }
-            try {
-                Time.run();
-                Interface.setTime();
-                if (Window && Interface.Hour == Time.h && Interface.Minute == Time.m && Time.s == 15) {
-                    //System.out.println("闹钟响了");
-                    javax.swing.SwingUtilities.invokeLater( new Runnable() {
-                        public void run() {
-                            Interface.AlarmClocks_initialize();
-                        }
-                    });
-                }
-                Thread.sleep(1000);
-            } catch (Exception e) {
-                e.printStackTrace();
-                break;
-            }
+            Thread.sleep(1000);
+            countThread();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 }
+
+
 
 
 

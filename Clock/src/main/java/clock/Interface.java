@@ -445,6 +445,7 @@ public class Interface {
         jPanelGoods.add(addRegion);
 
         JComboBox textItemNameField = new JComboBox();
+        textItemNameField.setEditable(true);
         JTextField textItemPriceField = new JTextField(6);
         JTextField textItemNumField = new JTextField(6);
         JPanel addItemPanel = new JPanel(new GridLayout(0, 2, 3, 3));
@@ -454,6 +455,13 @@ public class Interface {
         addItemPanel.add(textItemPriceField);
         addItemPanel.add(new JLabel("物品数量"));
         addItemPanel.add(textItemNumField);
+
+        textItemNameField.addActionListener(new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+            }
+        });
 
         final JButton addPrice = new JButton("加物");
         addPrice.setBounds(230, 10, 60, 26);
@@ -540,6 +548,11 @@ public class Interface {
             public void actionPerformed(ActionEvent e) {
                 jframe.dispose();
                 playUtil.closeAll();
+                System.gc();
+                LocalTime localNow = LocalTime.now().withNano(0);
+                Time.setHour(localNow.getHour());
+                Time.setMinute(localNow.getMinute());
+                Time.setSecond(localNow.getSecond());
             }
         });
         button_MoreSleep.setBounds(140, 240, 120, 30);

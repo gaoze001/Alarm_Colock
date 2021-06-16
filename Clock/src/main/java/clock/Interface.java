@@ -43,9 +43,6 @@ public class Interface {
     public int time_interval = 0;
     public static int Hour = 0, Minute = 0;
 
-    Date now = new Date();
-    DateFormat dateFromat = DateFormat.getDateTimeInstance();
-
     private static PlayUtil playUtil = new PlayUtil();
     private static java.util.List<String> minuteArr = Arrays.asList("9", "19", "29", "39", "49", "59");
 
@@ -54,9 +51,6 @@ public class Interface {
     //初始化；
     @SuppressWarnings("deprecation")
     public Interface() {
-        Time.setHour(now.getHours());
-        Time.setMinute(now.getMinutes());
-        Time.setSecond(now.getSeconds());
         initialize();
     }
 
@@ -98,14 +92,13 @@ public class Interface {
         textField.setBorder(null);
         textField.setFont(new java.awt.Font("Dialog", 1, 50));
 
-        date = new JTextField();
-        date.setBounds(70, 48, 250, 50);
-        jPanel.add(date);
-        date.setBackground(Color.white);
-        date.setOpaque(false);
-        date.setBorder(null);
-        date.setText(dateFromat.format(now));
-        date.setFont(new java.awt.Font("Dialog", 1, 30));
+//        date = new JTextField();
+//        date.setBounds(70, 48, 250, 50);
+//        jPanel.add(date);
+//        date.setBackground(Color.white);
+//        date.setOpaque(false);
+//        date.setBorder(null);
+//        date.setFont(new java.awt.Font("Dialog", 1, 30));
 
         JButton buttonStart = new JButton("加10");
         buttonStart.addActionListener(new ActionListener() {
@@ -167,16 +160,15 @@ public class Interface {
         resbutton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 LocalTime localNow = LocalTime.now().withNano(0);
-                Time.setHour(localNow.getHour());
-                Time.setMinute(localNow.getMinute());
-                Time.setSecond(localNow.getSecond());
+                Interface.setTime(localNow.getHour()+""+localNow.getMinute()+localNow.getSecond());
             }
         });
         resbutton.setBounds(337, 265, 80, 26);
         jPanel.add(resbutton);
 
         //初始化时间；
-        Interface.setTime();
+        LocalTime localNow = LocalTime.now().withNano(0);
+        Interface.setTime(localNow.getHour()+""+localNow.getMinute()+localNow.getSecond());
 
         //闹钟功能块；
         alarmClockTip = new JLabel("请依次输入闹钟的时分，并按“开启闹钟”开启！");
@@ -519,13 +511,8 @@ public class Interface {
     }
 
 
-    public static void setTime() {
-        String s = "";
-        s = " " + Integer.toString(Time.getHour()) + "  :  "
-                + Integer.toString(Time.getMinute()) + "  :  "
-                + Integer.toString(Time.getSecond());
-        System.out.println(s);
-        textField.setText(s);
+    public static void setTime(String timeStr) {
+        textField.setText(timeStr);
     }
 
     public static void AlarmClocks_initialize() {
@@ -549,10 +536,6 @@ public class Interface {
                 jframe.dispose();
                 playUtil.closeAll();
                 System.gc();
-                LocalTime localNow = LocalTime.now().withNano(0);
-                Time.setHour(localNow.getHour());
-                Time.setMinute(localNow.getMinute());
-                Time.setSecond(localNow.getSecond());
             }
         });
         button_MoreSleep.setBounds(140, 240, 120, 30);
@@ -595,9 +578,11 @@ public class Interface {
 
     public static void countThread() {
         try {
-            Time.run();
-            Interface.setTime();
-            if (Interface.Hour == Time.h && Interface.Minute == Time.m && Time.s == 15) {
+//            Time.run();
+            LocalTime localNow = LocalTime.now().withNano(0);
+            Interface.setTime(localNow.getHour()+""+localNow.getMinute()+localNow.getSecond());
+
+            if (Interface.Hour == localNow.getHour() && Interface.Minute == localNow.getMinute() && localNow.getSecond() == 15) {
                 //System.out.println("闹钟响了");
                 cachedThreadPool.execute(new Runnable() {
                     public void run() {

@@ -27,26 +27,27 @@ import java.util.stream.Collectors;
 
 public class Interface {
 
-    public static JFrame jframe;
-    public static JFrame frame;
-    public static JTabbedPane jTabbedPane;
-    public static JPanel jPanel, goodsPanel;
-    public static JTextField textField, date, alarmClock_hour, alarmClock_minute;
+
+    public  JFrame jframe;
+    public  JFrame frame;
+    public  JTabbedPane jTabbedPane;
+    public  JPanel jPanel, goodsPanel;
+    public  JTextField textField, date, alarmClock_hour, alarmClock_minute;
     ImageIcon img;
     JLabel background;
     JLabel alarmClockTip, alarmClockTextTip, alarmClock_Hour, alarmClock_Minute;
     JPanel background_p;
-    private static TrayIcon trayIcon = null;
-    static SystemTray tray = SystemTray.getSystemTray();
+    private  TrayIcon trayIcon = null;
+    SystemTray tray = SystemTray.getSystemTray();
 
     public Boolean control = false;
     public int time_interval = 0;
     public static int Hour = 0, Minute = 0;
 
-    private static PlayUtil playUtil = new PlayUtil();
+    private  PlayUtil playUtil = new PlayUtil();
     private static java.util.List<String> minuteArr = Arrays.asList("9", "19", "29", "39", "49", "59");
 
-    private static ExecutorService cachedThreadPool = Executors.newCachedThreadPool();
+//    private static ExecutorService cachedThreadPool = Executors.newCachedThreadPool();
 
     //初始化；
     @SuppressWarnings("deprecation")
@@ -160,7 +161,7 @@ public class Interface {
         resbutton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 LocalTime localNow = LocalTime.now().withNano(0);
-                Interface.setTime(localNow.getHour()+""+localNow.getMinute()+localNow.getSecond());
+                textField.setText(localNow.getHour()+""+localNow.getMinute()+localNow.getSecond());
             }
         });
         resbutton.setBounds(337, 265, 80, 26);
@@ -168,7 +169,7 @@ public class Interface {
 
         //初始化时间；
         LocalTime localNow = LocalTime.now().withNano(0);
-        Interface.setTime(localNow.getHour()+""+localNow.getMinute()+localNow.getSecond());
+        textField.setText(localNow.getHour()+":"+localNow.getMinute()+":"+localNow.getSecond());
 
         //闹钟功能块；
         alarmClockTip = new JLabel("请依次输入闹钟的时分，并按“开启闹钟”开启！");
@@ -275,13 +276,13 @@ public class Interface {
 
             public void windowIconified(WindowEvent e) { // 窗口最小化事件
                 frame.setVisible(false);
-                Interface.miniTray();
+                miniTray();
             }
         });
 
     }
 
-    private static void miniTray() { // 窗口最小化到任务栏托盘
+    private void miniTray() { // 窗口最小化到任务栏托盘
 
 //        String xmlfilePath = new Object() {
 //            public String getPath() {
@@ -310,7 +311,7 @@ public class Interface {
 
     }
 
-    public static void initRegionPanel(JPanel jPanelGoods) throws Exception {
+    public void initRegionPanel(JPanel jPanelGoods) throws Exception {
         jPanelGoods.setLayout(null);
         jPanelGoods.setBounds(100, 100, 480, 350);
 
@@ -511,11 +512,11 @@ public class Interface {
     }
 
 
-    public static void setTime(String timeStr) {
+    public void setTime(String timeStr) {
         textField.setText(timeStr);
     }
 
-    public static void AlarmClocks_initialize() {
+    public void AlarmClocks_initialize() {
         jframe = new JFrame();
         jframe.setBounds(80, 80, 400, 360);
         jframe.setFocusable(true);
@@ -551,7 +552,7 @@ public class Interface {
                 Integer integer = Integer.parseInt(alarmClock_hour.getText().trim()) + 1;
                 alarmClock_hour.setText(integer.toString());
             }
-            cachedThreadPool.execute(new Runnable() {
+          new Runnable() {
                 public void run() {
                     try {
                         playUtil.playMp3(ClassLoader.getSystemResource("mp.mp3"));
@@ -561,34 +562,33 @@ public class Interface {
                         e.printStackTrace();
                     }
                 }
-            });
+            };
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
     //计时器；
-    public static void runCount() {
-        cachedThreadPool.execute(new Runnable() {
-            public void run() {
-                Interface.countThread();
-            }
-        });
-    }
+//    public void runCount() {
+//        new Runnable() {
+//            public void run() {
+//                Interface.countThread();
+//            }
+//        };
+//    }
 
-    public static void countThread() {
+    public void countThread() {
         try {
 //            Time.run();
             LocalTime localNow = LocalTime.now().withNano(0);
-            Interface.setTime(localNow.getHour()+""+localNow.getMinute()+localNow.getSecond());
+            textField.setText(localNow.getHour()+":"+localNow.getMinute()+":"+localNow.getSecond());
 
             if (Interface.Hour == localNow.getHour() && Interface.Minute == localNow.getMinute() && localNow.getSecond() == 15) {
                 //System.out.println("闹钟响了");
-                cachedThreadPool.execute(new Runnable() {
-                    public void run() {
-                        Interface.AlarmClocks_initialize();
+               new Runnable() {
+                    public void run(){AlarmClocks_initialize();
                     }
-                });
+                };
             }
             Thread.sleep(1000);
             countThread();

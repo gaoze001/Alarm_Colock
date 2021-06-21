@@ -12,7 +12,7 @@ public class Main {
         Interface window = new Interface();
 //		window.AlarmClocks_initialize();
         window.frame.setVisible(true);
-        window.runCount();
+        window.countThread();
 
     }
 

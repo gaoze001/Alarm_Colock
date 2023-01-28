@@ -60,8 +60,8 @@ public class Interface {
         goodsPanel = new JPanel();
         frame = new JFrame("梦幻工具箱");
 //        jTabbedPane.addTab("闹铃", jPanel);
-        jTabbedPane.addTab("物价", goodsPanel);
         jTabbedPane.addTab("流水", jPanel);
+        jTabbedPane.addTab("物价", goodsPanel);
         frame.setContentPane(jTabbedPane);
         try {
             initRegionPanel(goodsPanel);

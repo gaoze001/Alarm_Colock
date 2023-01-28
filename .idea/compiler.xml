@@ -10,8 +10,8 @@
         <module name="Alarm_Colock" />
       </profile>
     </annotationProcessing>
-    <bytecodeTargetLevel>
-      <module name="Alarm_Colock" target="6" />
+    <bytecodeTargetLevel target="8">
+      <module name="Alarm_Colock" target="1.8" />
     </bytecodeTargetLevel>
   </component>
 </project>

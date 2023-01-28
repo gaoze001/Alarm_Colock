@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="Encoding">
-    <file url="file://$PROJECT_DIR$/Clock/src/clock/Interface.java" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/Clock/src/main/java/clock/Interface.java" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/Clock/src/main/java/clock/PlayUtil.java" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/Clock/src/main/java/clock/SqliteUtil.java" charset="UTF-8" />
+    <file url="PROJECT" charset="GBK" />
   </component>
 </project>
